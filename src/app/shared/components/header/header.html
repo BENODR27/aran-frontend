@@ -1,0 +1,26 @@
+<header class="app-header">
+  <button
+    class="app-header__menu"
+    type="button"
+    aria-label="Open navigation"
+    (click)="menuToggle.emit()"
+  >
+    ☰
+  </button>
+  <div class="app-header__context">
+    <span class="app-header__context-label">Workspace</span>
+    <strong>Operations control center</strong>
+  </div>
+  <div class="app-header__actions">
+    <button class="app-header__icon" type="button" aria-label="Notifications">
+      ♧<span></span>
+    </button>
+    <div class="app-header__profile">
+      <span class="app-header__avatar">BD</span
+      ><span class="app-header__identity"
+        ><strong>Beno David</strong><small>Administrator</small></span
+      >
+    </div>
+    <button class="app-header__logout" type="button" (click)="logout()">Sign out</button>
+  </div>
+</header>

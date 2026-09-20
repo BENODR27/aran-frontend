@@ -1,0 +1,62 @@
+{
+  "name": "aran-frontend",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:production": "ng build --configuration production",
+    "typecheck": "tsc --project tsconfig.app.json --noEmit",
+    "watch": "ng build --watch --configuration development",
+    "format": "prettier --write \"src/app/app.config.ts\" \"src/app/shared/components/data-table/*.{ts,html,scss}\" \"src/app/shared/components/empty-state/*.{ts,html,scss}\" \"src/app/shared/components/loading-state/*.{ts,scss}\" \"src/app/shared/components/action-toolbar/*.{ts,scss}\" \"src/app/shared/components/content-card/*.{ts,html,scss}\" \"src/app/shared/components/page-header/*.{ts,html,scss}\" \"src/app/shared/components/status-badge/*.{ts,scss}\" \"src/app/shared/components/alert/*.{ts,scss}\" \"src/app/shared/components/avatar/*.{ts,scss}\" \"src/app/shared/components/breadcrumbs/*.{ts,scss}\" \"src/app/shared/components/form-field/*.{ts,scss}\" \"src/app/shared/components/modal/*.{ts,scss}\" \"src/app/shared/components/skeleton/*.{ts,scss}\" \"src/app/shared/components/index.ts\" \"src/app/shared/environments/*.ts\" \"src/app/shared/services/Loading/*.ts\" \"src/app/shared/services/auth/*.ts\" \"src/app/shared/services/interceptors/*.ts\" \"src/app/shared/services/notification/*.ts\" \"src/app/shared/services/theme/*.ts\" \"src/app/shared/utils/table-util.ts\" \"docs/README.md\"",
+    "format:check": "prettier --check \"src/app/app.config.ts\" \"src/app/shared/components/data-table/*.{ts,html,scss}\" \"src/app/shared/components/empty-state/*.{ts,html,scss}\" \"src/app/shared/components/loading-state/*.{ts,scss}\" \"src/app/shared/components/action-toolbar/*.{ts,scss}\" \"src/app/shared/components/content-card/*.{ts,html,scss}\" \"src/app/shared/components/page-header/*.{ts,html,scss}\" \"src/app/shared/components/status-badge/*.{ts,scss}\" \"src/app/shared/components/alert/*.{ts,scss}\" \"src/app/shared/components/avatar/*.{ts,scss}\" \"src/app/shared/components/breadcrumbs/*.{ts,scss}\" \"src/app/shared/components/form-field/*.{ts,scss}\" \"src/app/shared/components/modal/*.{ts,scss}\" \"src/app/shared/components/skeleton/*.{ts,scss}\" \"src/app/shared/components/index.ts\" \"src/app/shared/environments/*.ts\" \"src/app/shared/services/Loading/*.ts\" \"src/app/shared/services/auth/*.ts\" \"src/app/shared/services/interceptors/*.ts\" \"src/app/shared/services/notification/*.ts\" \"src/app/shared/services/theme/*.ts\" \"src/app/shared/utils/table-util.ts\" \"docs/README.md\"",
+    "test": "ng test",
+    "test:ci": "ng test --watch=false --coverage=false",
+    "verify": "npm run typecheck && npm run format:check && npm run test:ci && npm run build:production"
+  },
+  "private": true,
+  "packageManager": "npm@11.19.0",
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0",
+    "npm": ">=11.0.0"
+  },
+  "dependencies": {
+    "@angular/common": "^22.1.0",
+    "@angular/compiler": "^22.1.0",
+    "@angular/core": "^22.1.0",
+    "@angular/forms": "^22.1.0",
+    "@angular/platform-browser": "^22.1.0",
+    "@angular/router": "^22.1.0",
+    "@ngrx/effects": "^22.0.0",
+    "@ngrx/entity": "^22.0.0",
+    "@ngrx/store": "^22.0.0",
+    "@ngrx/store-devtools": "^22.0.0",
+    "bootstrap": "^5.3.8",
+    "crypto-js": "^4.2.0",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
+    "rxjs": "~7.8.0",
+    "sweetalert2": "^11.26.25",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.1.6",
+    "@angular/cli": "^22.1.6",
+    "@angular/compiler-cli": "^22.1.0",
+    "@types/crypto-js": "^4.2.2",
+    "@types/file-saver": "^2.0.7",
+    "jsdom": "^28.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "vitest": "^4.0.8"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true,
+    "esbuild@0.28.2": true,
+    "lmdb@3.5.6": true,
+    "msgpackr-extract@3.0.4": true,
+    "core-js@3.50.0": true
+  }
+}

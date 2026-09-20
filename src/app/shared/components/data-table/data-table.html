@@ -1,0 +1,128 @@
+<section class="data-table" aria-label="Data table">
+  <div class="data-table__toolbar">
+    <div class="data-table__summary">
+      <span class="data-table__title"><ng-content select="[table-title]" /></span>
+      @if (selectable() && selectedKeys().size > 0) {
+        <span class="data-table__selection">{{ selectionLabel() }}</span>
+      }
+    </div>
+
+    @if (searchable()) {
+      <label class="data-table__search">
+        <span class="sr-only">Search {{ rowLabel() }}s</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="m21 21-4.35-4.35m2.1-5.15a7.25 7.25 0 1 1-14.5 0 7.25 7.25 0 0 1 14.5 0Z" />
+        </svg>
+        <input
+          [value]="searchTerm()"
+          (input)="setSearchTerm($event)"
+          [placeholder]="searchPlaceholder()"
+          type="search"
+        />
+      </label>
+    }
+  </div>
+
+  <div class="data-table__viewport">
+    <table>
+      <thead>
+        <tr>
+          @if (selectable()) {
+            <th class="data-table__checkbox-cell">
+              <input
+                aria-label="Select all visible records"
+                [checked]="allVisibleSelected()"
+                (change)="toggleAllVisible()"
+                type="checkbox"
+              />
+            </th>
+          }
+          @for (column of columns(); track column.key) {
+            <th
+              [style.width]="column.width"
+              [attr.aria-sort]="sortKey() === column.key ? sortDirection() : 'none'"
+            >
+              <button
+                [class.data-table__sort-button]="column.sortable !== false"
+                [disabled]="column.sortable === false"
+                (click)="sortBy(column)"
+                type="button"
+              >
+                {{ column.header }}
+                @if (column.sortable !== false && sortKey() === column.key) {
+                  <span aria-hidden="true">{{ sortDirection() === 'asc' ? '↑' : '↓' }}</span>
+                }
+              </button>
+            </th>
+          }
+          <th><ng-content select="[table-actions-header]" /></th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+          <tr>
+            <td [attr.colspan]="columns().length + (selectable() ? 2 : 1)">
+              <app-loading-state />
+            </td>
+          </tr>
+        } @else if (visibleRows().length === 0) {
+          <tr>
+            <td [attr.colspan]="columns().length + (selectable() ? 2 : 1)">
+              <app-empty-state [title]="emptyTitle()" [description]="emptyDescription()" />
+            </td>
+          </tr>
+        } @else {
+          @for (row of visibleRows(); track rowKey()(row)) {
+            <tr (click)="rowClick.emit(row)">
+              @if (selectable()) {
+                <td class="data-table__checkbox-cell" (click)="$event.stopPropagation()">
+                  <input
+                    [attr.aria-label]="'Select ' + rowLabel()"
+                    [checked]="isSelected(row)"
+                    (change)="toggleSelection(row)"
+                    type="checkbox"
+                  />
+                </td>
+              }
+              @for (column of columns(); track column.key) {
+                <td>{{ valueFor(row, column) }}</td>
+              }
+              <td class="data-table__actions"><ng-content select="[table-actions]" /></td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="data-table__footer">
+    <span
+      >Showing {{ firstVisibleRow() }}–{{ lastVisibleRow() }} of {{ sortedRows().length }}
+      {{ rowLabel() }}{{ sortedRows().length === 1 ? '' : 's' }}</span
+    >
+    @if (totalPages() > 1) {
+      <nav aria-label="Table pagination">
+        <button [disabled]="currentPage() === 1" (click)="setPage(currentPage() - 1)" type="button">
+          Previous
+        </button>
+        @for (page of pageNumbers(); track page) {
+          <button
+            [attr.aria-current]="currentPage() === page ? 'page' : null"
+            [class.is-active]="currentPage() === page"
+            (click)="setPage(page)"
+            type="button"
+          >
+            {{ page }}
+          </button>
+        }
+        <button
+          [disabled]="currentPage() === totalPages()"
+          (click)="setPage(currentPage() + 1)"
+          type="button"
+        >
+          Next
+        </button>
+      </nav>
+    }
+  </footer>
+</section>

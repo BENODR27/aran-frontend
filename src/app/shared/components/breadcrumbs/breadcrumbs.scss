@@ -1,0 +1,34 @@
+:host {
+  display: block;
+}
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  color: #64748b;
+  font-size: 0.8125rem;
+}
+.breadcrumbs li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.breadcrumbs button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.breadcrumbs button:not(:disabled):hover {
+  color: var(--app-primary, #2563eb);
+  text-decoration: underline;
+}
+.breadcrumbs button:disabled {
+  color: #0f172a;
+  font-weight: 600;
+  cursor: default;
+}

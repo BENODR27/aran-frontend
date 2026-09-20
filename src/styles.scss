@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --app-primary: #2563eb;
+  --app-surface: #ffffff;
+  --app-border: #e2e8f0;
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  color: #0f172a;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}

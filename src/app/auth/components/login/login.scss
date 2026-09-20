@@ -1,0 +1,121 @@
+:host {
+  display: block;
+  width: min(100%, 27rem);
+}
+.login-card {
+  width: 100%;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid #e2e8f0;
+  border-radius: 0.85rem;
+  background: #fff;
+  box-shadow: 0 1rem 3rem rgb(15 23 42 / 7%);
+}
+.login-card__mobile-logo {
+  display: none;
+}
+.login-card__eyebrow {
+  margin: 0 0 0.5rem;
+  color: #2563eb;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.login-card h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.55rem;
+}
+.login-card__heading > p:last-child {
+  margin: 0.65rem 0 0;
+  color: #64748b;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.login-card__demo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 1.5rem 0;
+  padding: 0.75rem;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.45rem;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+}
+.login-card__demo span {
+  color: #3b82f6;
+}
+.login-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.login-card__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.login-card label {
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.login-card__label-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.login-card a {
+  color: #2563eb;
+  font-size: 0.75rem;
+  text-decoration: none;
+}
+.login-card a:hover {
+  text-decoration: underline;
+}
+.login-card__error {
+  color: #dc2626;
+  font-size: 0.72rem;
+}
+.login-card__remember {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 400 !important;
+}
+.login-card__remember input {
+  accent-color: #2563eb;
+}
+.login-card__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem;
+  margin-top: 0.25rem;
+}
+.login-card__submit span {
+  font-size: 1.1rem;
+}
+.login-card__help {
+  margin: 1.5rem 0 0;
+  color: #64748b;
+  text-align: center;
+  font-size: 0.75rem;
+}
+@media (max-width: 800px) {
+  .login-card__mobile-logo {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+}

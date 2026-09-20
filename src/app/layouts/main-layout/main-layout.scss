@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+.main-layout__content {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+.main-layout__main {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: clamp(1rem, 3vw, 2.25rem);
+}
+.main-layout__backdrop {
+  display: none;
+}
+@media (max-width: 900px) {
+  .main-layout__backdrop {
+    position: fixed;
+    z-index: 20;
+    inset: 0;
+    display: block;
+    visibility: hidden;
+    background: rgb(15 23 42 / 45%);
+    opacity: 0;
+    transition:
+      opacity 160ms ease,
+      visibility 160ms ease;
+  }
+  .main-layout--sidebar-open .main-layout__backdrop {
+    visibility: visible;
+    opacity: 1;
+  }
+}

@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+label {
+  color: #334155;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+label span {
+  color: #dc2626;
+}
+.form-field__hint {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.75rem;
+}

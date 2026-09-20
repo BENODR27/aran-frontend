@@ -1,0 +1,34 @@
+<aside class="app-sidebar" [class.app-sidebar--open]="mobileOpen">
+  <div class="app-sidebar__brand">
+    <span>ARAN</span>
+    <div><strong>ARAN Platform</strong><small>Operations suite</small></div>
+    <button
+      class="app-sidebar__close"
+      type="button"
+      aria-label="Close navigation"
+      (click)="closeMenu.emit()"
+    >
+      ×
+    </button>
+  </div>
+  <p class="app-sidebar__section-label">Workspace</p>
+  <nav aria-label="Primary navigation">
+    @for (item of navigation; track item.label) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="app-sidebar__link--active"
+        [routerLinkActiveOptions]="{ exact: item.label === 'Dashboard' }"
+        (click)="closeMenu.emit()"
+        ><span class="app-sidebar__icon">{{ item.icon }}</span
+        >{{ item.label }}</a
+      >
+    }
+  </nav>
+  <div class="app-sidebar__footer">
+    <div class="app-sidebar__status">
+      <span></span>
+      <div><strong>All systems operational</strong><small>Last checked just now</small></div>
+    </div>
+    <small class="app-sidebar__version">ARAN Platform v1.0</small>
+  </div>
+</aside>

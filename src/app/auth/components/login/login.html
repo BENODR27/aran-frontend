@@ -1,0 +1,54 @@
+<section class="login-card">
+  <div class="login-card__heading">
+    <span class="login-card__mobile-logo">ARAN</span>
+    <p class="login-card__eyebrow">Welcome back</p>
+    <h2>Sign in to your workspace</h2>
+    <p>Enter your credentials to access the operations platform.</p>
+  </div>
+
+  <div class="login-card__demo">
+    <strong>Test environment</strong><span>Demo credentials are pre-filled for preview.</span>
+  </div>
+
+  <form [formGroup]="loginForm" (ngSubmit)="signIn()" novalidate>
+    <div class="login-card__field">
+      <label for="email">Work email</label>
+      <input
+        id="email"
+        class="form-control"
+        formControlName="email"
+        type="email"
+        autocomplete="email"
+        [class.is-invalid]="submitted && loginForm.controls.email.invalid"
+      />
+      @if (submitted && loginForm.controls.email.invalid) {
+        <small class="login-card__error">Enter a valid work email.</small>
+      }
+    </div>
+    <div class="login-card__field">
+      <div class="login-card__label-row">
+        <label for="password">Password</label><a routerLink="/auth/login">Forgot password?</a>
+      </div>
+      <input
+        id="password"
+        class="form-control"
+        formControlName="password"
+        type="password"
+        autocomplete="current-password"
+        [class.is-invalid]="submitted && loginForm.controls.password.invalid"
+      />
+      @if (submitted && loginForm.controls.password.invalid) {
+        <small class="login-card__error">Password must be at least 8 characters.</small>
+      }
+    </div>
+    <label class="login-card__remember"
+      ><input formControlName="remember" type="checkbox" /> Keep me signed in</label
+    >
+    <button class="btn btn-primary w-100 login-card__submit" type="submit">
+      Sign in <span aria-hidden="true">→</span>
+    </button>
+  </form>
+  <p class="login-card__help">
+    Need help? <a href="mailto:support@aran-platform.com">Contact support</a>
+  </p>
+</section>

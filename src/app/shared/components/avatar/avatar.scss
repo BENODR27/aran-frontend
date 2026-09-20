@@ -1,0 +1,36 @@
+:host {
+  display: inline-block;
+}
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 700;
+  vertical-align: middle;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.avatar img + span {
+  display: none;
+}
+.avatar--sm {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.7rem;
+}
+.avatar--md {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 0.8rem;
+}
+.avatar--lg {
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 1rem;
+}
