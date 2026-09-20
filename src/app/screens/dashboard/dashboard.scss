@@ -17,13 +17,13 @@
 }
 
 .dashboard__metric-label {
-  color: #64748b;
+  color: var(--app-text-muted);
   font-size: 0.8125rem;
   font-weight: 600;
 }
 
 .dashboard__metric strong {
-  color: #0f172a;
+  color: var(--app-text);
   font-size: 1.85rem;
   line-height: 1.2;
 }
@@ -34,7 +34,7 @@
 }
 
 .dashboard__metric-change small {
-  color: #64748b;
+  color: var(--app-text-muted);
   font-weight: 400;
 }
 
@@ -71,7 +71,7 @@
 }
 
 .dashboard__analytics-item strong {
-  color: #0f172a;
+  color: var(--app-text);
   font-size: 1.5rem;
 }
 
@@ -82,7 +82,7 @@
 }
 
 .dashboard__analytics-item small {
-  color: #64748b;
+  color: var(--app-text-muted);
   font-size: 0.75rem;
 }
 
@@ -107,14 +107,14 @@
 }
 
 .dashboard__bar-label strong {
-  color: #0f172a;
+  color: var(--app-text);
 }
 
 .dashboard__bar-track {
   height: 0.5rem;
   overflow: hidden;
   border-radius: 999px;
-  background: #e2e8f0;
+  background: var(--app-border);
 }
 
 .dashboard__bar-track span {

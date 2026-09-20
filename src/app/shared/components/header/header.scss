@@ -8,8 +8,8 @@
   gap: 1rem;
   min-height: 4.5rem;
   padding: 0.75rem clamp(1rem, 3vw, 2.25rem);
-  border-bottom: 1px solid #e2e8f0;
-  background: #fff;
+  border-bottom: 1px solid var(--app-border);
+  background: var(--app-surface);
 }
 .app-header__menu {
   display: none;
@@ -25,14 +25,14 @@
   gap: 0.15rem;
 }
 .app-header__context-label {
-  color: #94a3b8;
+  color: var(--app-text-muted);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .app-header__context strong {
-  color: #0f172a;
+  color: var(--app-text);
   font-size: 0.9rem;
 }
 .app-header__actions,
@@ -45,8 +45,71 @@
   position: relative;
   border: 0;
   background: transparent;
-  color: #64748b;
+  color: var(--app-text-muted);
   font-size: 1.25rem;
+  cursor: pointer;
+}
+.app-header__theme select {
+  padding: 0.45rem 1.8rem 0.45rem 0.65rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.4rem;
+  background: var(--app-surface);
+  color: var(--app-text-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.app-header__custom-theme {
+  position: absolute;
+  z-index: 10;
+  top: 4rem;
+  right: clamp(1rem, 3vw, 2.25rem);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.6rem;
+  background: var(--app-surface);
+  box-shadow: 0 8px 24px rgb(15 23 42 / 12%);
+}
+.app-header__custom-theme label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--app-text-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+.app-header__custom-theme input {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.3rem;
+  background: transparent;
+  cursor: pointer;
+}
+.app-header__custom-theme button {
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.35rem;
+  background: transparent;
+  color: var(--app-text-muted);
+  font-size: 0.68rem;
+  cursor: pointer;
+}
+.app-header__custom-theme-save {
+  border-color: var(--app-primary) !important;
+  background: var(--app-primary) !important;
+  color: #fff !important;
+}
+.app-header__custom-theme-open {
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.4rem;
+  background: var(--app-surface);
+  color: var(--app-text-muted);
+  font-size: 0.72rem;
   cursor: pointer;
 }
 .app-header__icon span {
@@ -84,10 +147,10 @@
 }
 .app-header__logout {
   padding: 0.45rem 0.7rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--app-border);
   border-radius: 0.4rem;
-  background: #fff;
-  color: #475569;
+  background: var(--app-surface);
+  color: var(--app-text-muted);
   font-size: 0.75rem;
   cursor: pointer;
 }
@@ -101,5 +164,10 @@
   .app-header__identity,
   .app-header__logout {
     display: none;
+  }
+  .app-header__custom-theme {
+    right: 0.75rem;
+    flex-wrap: wrap;
+    max-width: calc(100vw - 1.5rem);
   }
 }

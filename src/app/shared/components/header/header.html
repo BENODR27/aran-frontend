@@ -12,6 +12,33 @@
     <strong>Operations control center</strong>
   </div>
   <div class="app-header__actions">
+    <label class="app-header__theme">
+      <span class="visually-hidden">Theme</span>
+      <select
+        [value]="themeService.theme()"
+        aria-label="Select theme"
+        (change)="changeTheme($event)"
+      >
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="custom">Custom</option>
+      </select>
+    </label>
+    @if (themeService.theme() === 'custom' && customThemeOpen()) {
+      <div class="app-header__custom-theme" aria-label="Custom theme colors">
+        <label>Brand <input type="color" [value]="themeService.customColors().primary" (input)="changeCustomColor('primary', $event)" /></label>
+        <label>Surface <input type="color" [value]="themeService.customColors().surface" (input)="changeCustomColor('surface', $event)" /></label>
+        <label>Canvas <input type="color" [value]="themeService.customColors().background" (input)="changeCustomColor('background', $event)" /></label>
+        <label>Sidebar <input type="color" [value]="themeService.customColors().sidebar" (input)="changeCustomColor('sidebar', $event)" /></label>
+        <button type="button" (click)="resetCustomColors()">Reset</button>
+        <button type="button" class="app-header__custom-theme-save" (click)="saveCustomTheme()">Save</button>
+      </div>
+    }
+    @if (themeService.theme() === 'custom' && !customThemeOpen()) {
+      <button class="app-header__custom-theme-open" type="button" (click)="openCustomTheme()">
+        Customize
+      </button>
+    }
     <button class="app-header__icon" type="button" aria-label="Notifications">
       ♧<span></span>
     </button>

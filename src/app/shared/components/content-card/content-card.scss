@@ -21,12 +21,12 @@
 }
 .content-card__header h2 {
   margin: 0;
-  color: #0f172a;
+  color: var(--app-text);
   font-size: 1rem;
 }
 .content-card__header p {
   margin: 0.35rem 0 0;
-  color: #64748b;
+  color: var(--app-text-muted);
   font-size: 0.8125rem;
 }
 .content-card__body {
