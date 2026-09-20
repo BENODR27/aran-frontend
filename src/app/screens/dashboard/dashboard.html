@@ -1,91 +1,90 @@
 <app-page-header
-  eyebrow="Overview"
-  title="Good morning, Beno"
-  description="Here is what is happening across your operation today."
+  eyebrow="Platform monitoring"
+  title="Dashboard"
+  description="A real-time overview of platform health, usage, and operational activity."
 >
-  <button class="btn btn-primary" type="button">+ New activity</button>
+  <button class="btn btn-primary" type="button">Generate report</button>
 </app-page-header>
 
-<div class="dashboard__metrics row g-3">
-  <div class="col-12 col-sm-6 col-xl-3">
-    <app-content-card title="Active batches"
-      ><strong class="dashboard__metric">248</strong
-      ><small class="text-success">↑ 12.5% vs last month</small></app-content-card
-    >
-  </div>
-  <div class="col-12 col-sm-6 col-xl-3">
-    <app-content-card title="Completed today"
-      ><strong class="dashboard__metric">86</strong
-      ><small class="text-success">↑ 8.2% vs yesterday</small></app-content-card
-    >
-  </div>
-  <div class="col-12 col-sm-6 col-xl-3">
-    <app-content-card title="Needs attention"
-      ><strong class="dashboard__metric">12</strong
-      ><small class="text-warning">3 require action</small></app-content-card
-    >
-  </div>
-  <div class="col-12 col-sm-6 col-xl-3">
-    <app-content-card title="Traceability score"
-      ><strong class="dashboard__metric">98.4%</strong
-      ><small class="text-success">↑ 1.4% this quarter</small></app-content-card
-    >
-  </div>
+<section class="dashboard__metrics" aria-label="Key performance indicators">
+  @for (metric of metrics; track metric.label) {
+    <app-content-card>
+      <div class="dashboard__metric">
+        <span class="dashboard__metric-label">{{ metric.label }}</span>
+        <strong>{{ metric.value }}</strong>
+        <span class="dashboard__metric-change dashboard__metric-change--{{ metric.tone }}">
+          {{ metric.change }} <small>{{ metric.detail }}</small>
+        </span>
+      </div>
+    </app-content-card>
+  }
+</section>
+
+<div class="dashboard__report-grid">
+  <app-content-card
+    title="Platform performance"
+    description="Current utilization across your operational services."
+  >
+    <div class="dashboard__bars">
+      @for (bar of reportBars; track bar.label) {
+        <div class="dashboard__bar-row">
+          <div class="dashboard__bar-label">
+            <span>{{ bar.label }}</span><strong>{{ bar.value }}%</strong>
+          </div>
+          <div class="dashboard__bar-track">
+            <span [style.width.%]="bar.value" [style.background]="bar.color"></span>
+          </div>
+        </div>
+      }
+    </div>
+  </app-content-card>
+
+  <app-content-card title="System health" description="Live status of core platform services.">
+    <div class="dashboard__health">
+      <div><app-status-badge label="Operational" tone="success" /><span>Production systems</span></div>
+      <div><app-status-badge label="Operational" tone="success" /><span>Data synchronization</span></div>
+      <div><app-status-badge label="Monitoring" tone="info" /><span>Security services</span></div>
+      <div><app-status-badge label="Attention" tone="warning" /><span>Notification queue</span></div>
+    </div>
+  </app-content-card>
 </div>
 
 <app-content-card
-  title="Recent activity"
-  description="The latest changes across your facilities."
+  title="IAM audit activity"
+  description="Recent identity and access events across your tenants."
   [padded]="false"
 >
   <app-action-toolbar>
-    <select toolbar-filters class="form-select form-select-sm" aria-label="Filter by facility">
-      <option>All facilities</option>
-      <option>Amman Central</option>
-      <option>Irbid North</option>
+    <select toolbar-filters class="form-select form-select-sm" aria-label="Filter by tenant">
+      <option>All tenants</option>
+      <option>Northstar tenant</option>
+      <option>Cedar Manufacturing</option>
+      <option>Platform services</option>
     </select>
     <button toolbar-actions class="btn btn-sm btn-outline-secondary" type="button">Export</button>
   </app-action-toolbar>
   <app-data-table
     [columns]="columns"
     [rows]="activities"
-    [pageSize]="4"
+    [pageSize]="6"
     [searchable]="true"
-    rowLabel="activity"
+    rowLabel="event"
   />
 </app-content-card>
 
-<div class="dashboard__bottom row g-3">
-  <div class="col-12 col-lg-7">
-    <app-content-card title="Operational status"
-      ><div class="dashboard__statuses">
+<section class="dashboard__analytics" aria-label="Operational analytics">
+  @for (item of analytics; track item.label) {
+    <app-content-card>
+      <div class="dashboard__analytics-item">
+        <span class="dashboard__metric-label">{{ item.label }}</span>
+        <strong>{{ item.value }}</strong>
         <div>
-          <app-status-badge label="Production systems" tone="success" /><span
-            >All systems operational</span
-          >
+          <span class="dashboard__metric-change dashboard__metric-change--{{ item.tone }}">
+            {{ item.change }}
+          </span>
+          <small>{{ item.detail }}</small>
         </div>
-        <div>
-          <app-status-badge label="Data sync" tone="info" /><span
-            >Last synchronized 2 minutes ago</span
-          >
-        </div>
-        <div>
-          <app-status-badge label="Notifications" tone="warning" /><span
-            >3 unread notifications</span
-          >
-        </div>
-      </div></app-content-card
-    >
-  </div>
-  <div class="col-12 col-lg-5">
-    <app-content-card title="Quick start"
-      ><p class="dashboard__quick-copy">
-        Use the navigation to explore the operations workspace. This dashboard uses test data and is
-        ready to connect to your API.
-      </p>
-      <button class="btn btn-outline-primary btn-sm" type="button">
-        View documentation
-      </button></app-content-card
-    >
-  </div>
-</div>
+      </div>
+    </app-content-card>
+  }
+</section>

@@ -2,9 +2,15 @@
   display: block;
 }
 .app-sidebar {
+  position: fixed;
+  z-index: 25;
+  top: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   width: 16rem;
   min-height: 100vh;
+  overflow-y: auto;
   flex-direction: column;
   flex: 0 0 16rem;
   padding: 1.25rem 1rem;

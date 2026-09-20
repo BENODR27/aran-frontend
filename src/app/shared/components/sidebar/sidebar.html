@@ -11,13 +11,13 @@
       ×
     </button>
   </div>
-  <p class="app-sidebar__section-label">Workspace</p>
+  <p class="app-sidebar__section-label">Platform</p>
   <nav aria-label="Primary navigation">
-    @for (item of navigation; track item.label) {
+    @for (item of navigation; track item.key) {
       <a
         [routerLink]="item.route"
         routerLinkActive="app-sidebar__link--active"
-        [routerLinkActiveOptions]="{ exact: item.label === 'Dashboard' }"
+        [routerLinkActiveOptions]="{ exact: item.key === 'dashboard' }"
         (click)="closeMenu.emit()"
         ><span class="app-sidebar__icon">{{ item.icon }}</span
         >{{ item.label }}</a

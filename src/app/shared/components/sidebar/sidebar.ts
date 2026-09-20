@@ -1,11 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-
-interface NavigationItem {
-  readonly label: string;
-  readonly icon: string;
-  readonly route: string;
-}
+import { MockDataService } from '../../services/mock-data/mock-data.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -17,10 +12,6 @@ interface NavigationItem {
 export class Sidebar {
   @Input() mobileOpen = false;
   @Output() readonly closeMenu = new EventEmitter<void>();
-  protected readonly navigation: readonly NavigationItem[] = [
-    { label: 'Dashboard', icon: '⌂', route: '/dashboard' },
-    { label: 'Batch traceability', icon: '◈', route: '/dashboard' },
-    { label: 'Operations', icon: '◫', route: '/dashboard' },
-    { label: 'Reports', icon: '▤', route: '/dashboard' },
-  ];
+  protected readonly content = inject(MockDataService);
+  protected readonly navigation = this.content.adminMenu;
 }

@@ -3,16 +3,22 @@
 }
 .main-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background: #f8fafc;
 }
 .main-layout__content {
   display: flex;
   min-width: 0;
+  min-height: 0;
   flex: 1;
   flex-direction: column;
+  overflow: hidden;
+  margin-left: 16rem;
 }
 .main-layout__main {
+  min-height: 0;
+  overflow-y: auto;
   width: 100%;
   max-width: 1600px;
   margin: 0 auto;
@@ -22,6 +28,10 @@
   display: none;
 }
 @media (max-width: 900px) {
+  .main-layout__content {
+    margin-left: 0;
+  }
+
   .main-layout__backdrop {
     position: fixed;
     z-index: 20;
