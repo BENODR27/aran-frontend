@@ -1,0 +1,20 @@
+@if (record) {
+  <app-page-header eyebrow="Audit logs" [title]="record.event" description="Review the complete event context and audit metadata."><a class="btn btn-outline-secondary" routerLink="/audit/logs">Back to audit logs</a></app-page-header>
+  <section class="audit-stats"><app-content-card><strong>{{ record.actor }}</strong><span>Actor</span></app-content-card><app-content-card><strong>{{ record.resource }}</strong><span>Resource</span></app-content-card><app-content-card><strong>{{ record.category }}</strong><span>Category</span></app-content-card><app-content-card><app-status-badge [label]="record.status" [tone]="statusTone(record.status)" /><span>Event status</span></app-content-card></section>
+  <app-content-card title="Audit viewer" description="Immutable event metadata captured by the platform."><dl class="audit-details"><div><dt>Event ID</dt><dd>{{ record.id }}</dd></div><div><dt>IP address</dt><dd>{{ record.ipAddress }}</dd></div><div><dt>Timestamp</dt><dd>{{ record.timestamp }}</dd></div><div><dt>Details</dt><dd>{{ record.details }}</dd></div></dl></app-content-card>
+} @else {
+  <app-page-header eyebrow="Audit logs" [title]="getActiveTabTitle()" description="Search, filter, review, and export platform activity across identity, security, authorization, and billing."><button class="btn btn-primary" type="button">Export audit log</button></app-page-header>
+  <nav class="audit-tabs" aria-label="Audit sections">@for (item of tabs; track item[0]) { <a [routerLink]="['/audit', item[1]]" [class.audit-tabs__active]="tab === item[1]">{{ item[0] }}</a> }</nav>
+  <section class="audit-stats"><app-content-card><strong>{{ service.metrics.eventsToday }}</strong><span>Events today</span></app-content-card><app-content-card><strong>{{ service.metrics.successfulEvents }}</strong><span>Successful events</span></app-content-card><app-content-card><strong>{{ service.metrics.reviewQueue }}</strong><span>Review queue</span></app-content-card><app-content-card><strong>{{ service.metrics.failedEvents }}</strong><span>Failed events</span></app-content-card></section>
+  @if (tab === 'timeline') {
+    <app-content-card title="Activity timeline" description="Chronological view of recent platform activity." [padded]="false">
+      <div class="audit-timeline">@for (item of service.records(); track item.id) { <a class="audit-timeline__item" [routerLink]="['/audit', item.id]"><span class="audit-timeline__dot" [class.audit-timeline__dot--warning]="item.status === 'Review'" [class.audit-timeline__dot--failed]="item.status === 'Failed'"></span><span><strong>{{ item.event }}</strong><small>{{ item.actor }} · {{ item.resource }} · {{ item.timestamp }}</small></span><app-status-badge [label]="item.status" [tone]="statusTone(item.status)" /></a> }</div>
+    </app-content-card>
+  } @else {
+    <app-content-card title="Audit event directory" description="Use search and filters to investigate platform activity." [padded]="false">
+      <div class="audit-filters"><input class="form-control" name="search" [(ngModel)]="search" placeholder="Search event, actor, resource, or IP address" /><select class="form-select" name="category" [(ngModel)]="category"><option>All categories</option><option>Identity</option><option>Security</option><option>Authorization</option><option>System</option><option>Billing</option></select><select class="form-select" name="status" [(ngModel)]="status"><option>All statuses</option><option>Success</option><option>Review</option><option>Failed</option></select></div>
+      <app-data-table [columns]="columns" [rows]="filteredRecords" [pageSize]="8" rowLabel="audit event" [rowKey]="(row) => row.id" />
+      <div class="audit-links">@for (item of filteredRecords; track item.id) { <a [routerLink]="['/audit', item.id]">View {{ item.event }}</a> }</div>
+    </app-content-card>
+  }
+}

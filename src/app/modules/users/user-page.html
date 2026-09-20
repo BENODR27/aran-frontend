@@ -1,0 +1,50 @@
+@if (mode === 'create') {
+  <app-page-header eyebrow="User management" title="Invite user" description="Create an identity and assign access through applications and groups.">
+    <a class="btn btn-outline-secondary" routerLink="/users">Back to users</a>
+  </app-page-header>
+  <app-content-card title="User details" description="The user will receive an invitation to activate their account.">
+    <form class="user-form" (ngSubmit)="save()">
+      <label><span>Tenant</span><select class="form-select" name="tenantId" [(ngModel)]="form.tenantId" (ngModelChange)="onTenantChange()" required><option value="" disabled>Select a tenant</option>@for (tenant of tenantService.tenants(); track tenant.id) { <option [value]="tenant.id">{{ tenant.name }} · {{ tenant.plan }}</option> }</select></label>
+      <label><span>Company</span><select class="form-select" name="companyId" [(ngModel)]="form.companyId" (ngModelChange)="onCompanyChange()" required><option value="" disabled>Select a company</option>@for (company of companiesForTenant(); track company.id) { <option [value]="company.id">{{ company.name }} · {{ company.industry }}</option> }</select></label>
+      <fieldset class="facility-picker"><legend>Facilities</legend><details open><summary>Select facilities for this user <span>{{ selectedFacilityIds().size }} selected</span></summary><div class="facility-picker__list">@for (facility of facilitiesForCompany(); track facility.id) { <label><input type="checkbox" [checked]="isFacilitySelected(facility.id)" (change)="toggleFacility(facility.id, checked($event))" /><span>{{ facility.name }}</span><small>{{ facility.location }}</small></label> } @empty { <p>No facilities are available for the selected company.</p> }</div></details></fieldset>
+      <fieldset class="facility-picker application-picker"><legend>Applications</legend><details open><summary>Select applications <span>{{ selectedApplicationIds().size }} selected</span></summary><div class="facility-picker__list">@for (application of applicationsForTenant(); track application.id) { <label><input type="checkbox" [checked]="isApplicationSelected(application.id)" (change)="toggleApplication(application.id, checked($event))" /><span>{{ application.name }}</span><small>{{ application.type }}</small></label> } @empty { <p>No applications are available for the selected tenant.</p> }</div></details></fieldset>
+      <label><span>Full name</span><input class="form-control" name="name" [(ngModel)]="form.name" placeholder="Enter full name" required /></label>
+      <label><span>Email address</span><input class="form-control" type="email" name="email" [(ngModel)]="form.email" placeholder="name@company.com" required /></label>
+      <label><span>Password</span><input class="form-control" type="password" name="password" [(ngModel)]="form.password" placeholder="Set initial password" required minlength="8" /></label>
+      <fieldset class="facility-picker group-picker"><legend>Groups</legend><details open><summary>Select groups (optional) <span>{{ selectedGroupIds().size }} selected</span></summary><div class="facility-picker__list">@for (group of groupsForApplication(); track group.id) { <label><input type="checkbox" [checked]="isGroupSelected(group.id)" (change)="toggleGroup(group.id, checked($event))" /><span>{{ group.name }}</span><small>{{ group.roleIds.length }} roles · single application</small></label> } @empty { <p>No compatible single-application groups are available.</p> }</div></details></fieldset>
+      @if (validationError()) { <p class="user-form__error" role="alert">{{ validationError() }}</p> }
+      <button class="btn btn-primary" type="submit">Send invitation</button>
+    </form>
+  </app-content-card>
+} @else if (user) {
+  <app-page-header eyebrow="User management" [title]="user.name" [description]="user.email">
+    <a class="btn btn-outline-secondary" routerLink="/users">Back to users</a>
+  </app-page-header>
+  <nav class="user-tabs" aria-label="User profile sections">
+    @for (item of tabs; track item[0]) {
+      <a [routerLink]="['/users', user.id, item[1]]" [class.user-tabs__active]="tab === item[1]">{{ item[0] }}</a>
+    }
+  </nav>
+  @if (tab === 'activity' || tab === 'audit') {
+    <app-content-card [title]="getActiveTabTitle()" description="Identity and access activity for this user.">
+      <app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="event" />
+    </app-content-card>
+  } @else {
+    <section class="user-stats">
+      <app-content-card><strong>{{ user.role }}</strong><span>Primary role</span></app-content-card>
+      <app-content-card><strong>{{ user.tenant }}</strong><span>Tenant</span></app-content-card>
+      <app-content-card><app-status-badge [label]="user.status" [tone]="statusTone(user.status)" /><span>Account status</span></app-content-card>
+      <app-content-card><strong>2</strong><span>Active sessions</span></app-content-card>
+    </section>
+    <app-content-card [title]="getActiveTabTitle()" description="Identity access details and configuration.">
+      <dl class="user-details"><div><dt>User ID</dt><dd>{{ user.id }}</dd></div><div><dt>Email</dt><dd>{{ user.email }}</dd></div><div><dt>Tenant</dt><dd>{{ user.tenant }}</dd></div><div><dt>Last activity</dt><dd>{{ user.lastLogin }}</dd></div></dl>
+    </app-content-card>
+  }
+} @else {
+  <app-page-header eyebrow="User management" title="Users" description="Manage identities, roles, permissions, sessions, and devices." />
+  <app-content-card title="User directory" description="All identities registered across the platform." [padded]="false">
+    <div class="user-toolbar"><span>{{ service.users().length }} users</span><a class="btn btn-primary" routerLink="/users/create">Invite user</a></div>
+    <app-data-table [columns]="columns" [rows]="service.users()" [pageSize]="8" rowLabel="user" [rowKey]="(row) => row.id" />
+    <div class="user-links">@for (item of service.users(); track item.id) { <a [routerLink]="['/users', item.id]">View {{ item.name }}</a> }</div>
+  </app-content-card>
+}

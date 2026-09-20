@@ -1,0 +1,48 @@
+@if (mode === 'create') {
+  <app-page-header eyebrow="Plan management" title="Create plan" description="Define a commercial plan and its feature entitlements.">
+    <a class="btn btn-outline-secondary" routerLink="/plans">Back to plans</a>
+  </app-page-header>
+  <app-content-card title="Plan details" description="Set the plan identity and monthly price.">
+    <form class="plan-form" (ngSubmit)="save()">
+      <label><span>Plan name</span><input class="form-control" name="name" [(ngModel)]="form.name" placeholder="Enter plan name" required /></label>
+      <label><span>Description</span><textarea class="form-control" name="description" [(ngModel)]="form.description" placeholder="Describe the plan" rows="3" required></textarea></label>
+      <label><span>Price</span><input class="form-control" name="price" [(ngModel)]="form.price" placeholder="Example: $899 / month" required /></label>
+      <button class="btn btn-primary" type="submit">Create plan</button>
+    </form>
+  </app-content-card>
+} @else if (plan) {
+  <app-page-header eyebrow="Plan management" [title]="plan.name" description="Manage plan features, subscribers, and usage performance.">
+    <a class="btn btn-outline-secondary" routerLink="/plans">Back to plans</a>
+  </app-page-header>
+  <nav class="plan-tabs" aria-label="Plan sections">
+    @for (item of tabs; track item[0]) {
+      <a [routerLink]="item[1] ? ['/plans', plan.id, item[1]] : ['/plans', plan.id]" [class.plan-tabs__active]="!tab && !item[1] || tab === item[1]">{{ item[0] }}</a>
+    }
+  </nav>
+  @if (!tab) {
+    <section class="plan-stats">
+      <app-content-card><strong>{{ plan.price }}</strong><span>Monthly price</span></app-content-card>
+      <app-content-card><strong>{{ plan.subscribers }}</strong><span>Subscribers</span></app-content-card>
+      <app-content-card><strong>{{ plan.features }}</strong><span>Included features</span></app-content-card>
+      <app-content-card><app-status-badge [label]="plan.status" [tone]="statusTone(plan.status)" /><span>Plan status</span></app-content-card>
+    </section>
+    <app-content-card title="Plan overview" description="Commercial plan definition and governance context.">
+      <dl class="plan-details"><div><dt>Plan ID</dt><dd>{{ plan.id }}</dd></div><div><dt>Description</dt><dd>{{ plan.description }}</dd></div><div><dt>Monthly price</dt><dd>{{ plan.price }}</dd></div><div><dt>Last updated</dt><dd>{{ plan.updated }}</dd></div></dl>
+    </app-content-card>
+  } @else {
+    <app-content-card [title]="getActiveTabTitle()" description="Plan entitlements, subscriber context, and recent changes.">
+      @if (tab === 'usage') {
+        <app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="plan event" />
+      } @else {
+        <app-data-table [columns]="columns" [rows]="service.plans()" [pageSize]="5" rowLabel="plan" />
+      }
+    </app-content-card>
+  }
+} @else {
+  <app-page-header eyebrow="Plan management" title="Plans" description="Configure commercial packages and feature entitlements for tenant subscriptions." />
+  <app-content-card title="Plan catalog" description="Commercial plans configured across the platform." [padded]="false">
+    <div class="plan-toolbar"><span>{{ service.plans().length }} plans</span><a class="btn btn-primary" routerLink="/plans/create">Create plan</a></div>
+    <app-data-table [columns]="columns" [rows]="service.plans()" [pageSize]="8" rowLabel="plan" [rowKey]="(row) => row.id" />
+    <div class="plan-links">@for (item of service.plans(); track item.id) { <a [routerLink]="['/plans', item.id]">View {{ item.name }}</a> }</div>
+  </app-content-card>
+}

@@ -1,0 +1,31 @@
+@if (tenant) {
+  <app-page-header eyebrow="Tenant management" [title]="tenant.name" description="Manage tenant ownership, access, subscriptions, and audit history.">
+    <a class="btn btn-outline-secondary" routerLink="/tenants">Back to tenants</a>
+  </app-page-header>
+  <nav class="tenant-tabs" aria-label="Tenant sections">
+    @for (item of tabs; track item[0]) {
+      <a [routerLink]="item[1] ? ['/tenants', tenant.id, item[1]] : ['/tenants', tenant.id]" [class.tenant-tabs__active]="!tab && !item[1] || tab === item[1]">{{ item[0] }}</a>
+    }
+  </nav>
+  @if (!tab) {
+    <section class="tenant-stats">
+      <app-content-card><strong>{{ tenant.users.toLocaleString() }}</strong><span>Users</span></app-content-card>
+      <app-content-card><strong>{{ tenant.companies }}</strong><span>Companies</span></app-content-card>
+      <app-content-card><strong>{{ tenant.plan }}</strong><span>Subscription plan</span></app-content-card>
+      <app-content-card><app-status-badge [label]="tenant.status" [tone]="statusTone(tenant.status)" /><span>Tenant status</span></app-content-card>
+    </section>
+    <app-content-card title="Tenant overview" description="Core ownership and lifecycle information.">
+      <dl class="tenant-details"><div><dt>Tenant ID</dt><dd>{{ tenant.id }}</dd></div><div><dt>Last updated</dt><dd>{{ tenant.updated }}</dd></div><div><dt>Primary owner</dt><dd>Maya Haddad</dd></div><div><dt>Provisioning</dt><dd>Managed SaaS tenant</dd></div></dl>
+    </app-content-card>
+  } @else {
+    <app-content-card [title]="getActiveTabTitle()" description="Tenant-scoped records and activity.">
+      @if (tab === 'audit') {
+        <app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="event" />
+      } @else {
+        <app-data-table [columns]="columns" [rows]="service.tenants()" [pageSize]="5" rowLabel="tenant" />
+      }
+    </app-content-card>
+  }
+} @else {
+  <app-page-header eyebrow="Tenant management" title="Tenant not found" description="The requested tenant could not be found." />
+}

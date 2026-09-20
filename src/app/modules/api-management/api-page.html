@@ -1,0 +1,20 @@
+@if (mode === 'create') {
+  <app-page-header eyebrow="API management" title="Create API credential" description="Create a controlled integration credential for platform access."><a class="btn btn-outline-secondary" routerLink="/api-management">Back to API management</a></app-page-header>
+  <app-content-card title="Credential details" description="Define the credential owner and access type.">
+    <form class="api-form" (ngSubmit)="save()">
+      <label><span>Name</span><input class="form-control" name="name" [(ngModel)]="form.name" placeholder="Enter credential name" required /></label>
+      <label><span>Owner</span><input class="form-control" name="owner" [(ngModel)]="form.owner" placeholder="Assign a tenant" required /></label>
+      <label><span>Type</span><select class="form-select" name="type" [(ngModel)]="form.type"><option>API key</option><option>OAuth client</option><option>Service account</option><option>Webhook</option></select></label>
+      <button class="btn btn-primary" type="submit">Create credential</button>
+    </form>
+  </app-content-card>
+} @else if (record) {
+  <app-page-header eyebrow="API management" [title]="record.name" description="Review credential scope, usage, and security lifecycle."><a class="btn btn-outline-secondary" routerLink="/api-management">Back to API management</a></app-page-header>
+  <nav class="api-tabs" aria-label="API management sections">@for (item of tabs; track item[0]) { <a [routerLink]="['/api-management', item[1]]" [class.api-tabs__active]="tab === item[1]">{{ item[0] }}</a> }</nav>
+  <section class="api-stats"><app-content-card><strong>{{ record.type }}</strong><span>Credential type</span></app-content-card><app-content-card><strong>{{ record.requests }}</strong><span>Requests</span></app-content-card><app-content-card><strong>{{ record.scope }}</strong><span>Access scope</span></app-content-card><app-content-card><app-status-badge [label]="record.status" [tone]="statusTone(record.status)" /><span>Credential status</span></app-content-card></section>
+  <app-content-card title="Credential overview" description="Integration ownership and security context."><dl class="api-details"><div><dt>Credential ID</dt><dd>{{ record.id }}</dd></div><div><dt>Owner</dt><dd>{{ record.owner }}</dd></div><div><dt>Scope</dt><dd>{{ record.scope }}</dd></div><div><dt>Last updated</dt><dd>{{ record.updated }}</dd></div></dl></app-content-card>
+} @else {
+  <app-page-header eyebrow="API management" title="API Management" description="Manage credentials, OAuth clients, webhooks, tokens, and API usage."></app-page-header>
+  <nav class="api-tabs" aria-label="API management sections">@for (item of tabs; track item[0]) { <a [routerLink]="['/api-management', item[1]]" [class.api-tabs__active]="tab === item[1]">{{ item[0] }}</a> }</nav>
+  <app-content-card title="Integration credentials" description="Credentials and API integrations configured across the platform." [padded]="false"><div class="api-toolbar"><span>{{ service.records().length }} records</span><a class="btn btn-primary" routerLink="/api-management/create">Create credential</a></div><app-data-table [columns]="columns" [rows]="service.records()" [pageSize]="8" rowLabel="API record" [rowKey]="(row) => row.id" /><div class="api-links">@for (item of service.records(); track item.id) { <a [routerLink]="['/api-management', item.id]">View {{ item.name }}</a> }</div></app-content-card>
+}

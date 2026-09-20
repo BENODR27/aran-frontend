@@ -1,0 +1,24 @@
+@if (mode === 'create') {
+  <app-page-header eyebrow="Notification management" title="Create notification" description="Create a reusable notification campaign or message template."><a class="btn btn-outline-secondary" routerLink="/notifications">Back to notifications</a></app-page-header>
+  <app-content-card title="Notification details" description="Define the message channel and target audience.">
+    <form class="notification-form" (ngSubmit)="save()">
+      <label><span>Subject</span><input class="form-control" name="subject" [(ngModel)]="form.subject" placeholder="Enter notification subject" required /></label>
+      <label><span>Channel</span><select class="form-select" name="channel" [(ngModel)]="form.channel"><option>Email</option><option>SMS</option><option>Push</option><option>In-app</option></select></label>
+      <label><span>Audience</span><input class="form-control" name="audience" [(ngModel)]="form.audience" placeholder="Define target audience" required /></label>
+      <button class="btn btn-primary" type="submit">Create notification</button>
+    </form>
+  </app-content-card>
+} @else if (record) {
+  <app-page-header eyebrow="Notification management" [title]="record.subject" description="Review delivery, audience, and notification lifecycle."><a class="btn btn-outline-secondary" routerLink="/notifications">Back to notifications</a></app-page-header>
+  <section class="notification-stats"><app-content-card><strong>{{ record.channel }}</strong><span>Channel</span></app-content-card><app-content-card><strong>{{ record.audience }}</strong><span>Audience</span></app-content-card><app-content-card><strong>{{ record.delivered }}</strong><span>Delivery</span></app-content-card><app-content-card><app-status-badge [label]="record.status" [tone]="statusTone(record.status)" /><span>Notification status</span></app-content-card></section>
+  <app-content-card title="Notification overview" description="Delivery and ownership context."><dl class="notification-details"><div><dt>Notification ID</dt><dd>{{ record.id }}</dd></div><div><dt>Channel</dt><dd>{{ record.channel }}</dd></div><div><dt>Audience</dt><dd>{{ record.audience }}</dd></div><div><dt>Last updated</dt><dd>{{ record.updated }}</dd></div></dl></app-content-card>
+} @else {
+  <app-page-header eyebrow="Notification management" [title]="getActiveTabTitle()" description="Manage templates, campaigns, notification history, and delivery schedules."><a class="btn btn-primary" routerLink="/notifications/create">Create notification</a></app-page-header>
+  <nav class="notification-tabs" aria-label="Notification sections">@for (item of tabs; track item[0]) { <a [routerLink]="['/notifications', item[1]]" [class.notification-tabs__active]="tab === item[1]">{{ item[0] }}</a> }</nav>
+  <section class="notification-stats"><app-content-card><strong>{{ service.metrics.sentToday }}</strong><span>Sent today</span></app-content-card><app-content-card><strong>{{ service.metrics.deliveryRate }}</strong><span>Delivery rate</span></app-content-card><app-content-card><strong>{{ service.metrics.scheduled }}</strong><span>Scheduled</span></app-content-card><app-content-card><strong>{{ service.metrics.failed }}</strong><span>Failed deliveries</span></app-content-card></section>
+  @if (tab === 'history') {
+    <app-content-card title="Notification history" description="Recent campaigns, delivery events, and outcomes." [padded]="false"><app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="notification event" /></app-content-card>
+  } @else {
+    <app-content-card title="Notification directory" description="Templates and campaigns configured across the platform." [padded]="false"><app-data-table [columns]="columns" [rows]="service.records()" [pageSize]="8" rowLabel="notification" [rowKey]="(row) => row.id" /><div class="notification-links">@for (item of service.records(); track item.id) { <a [routerLink]="['/notifications', item.id]">View {{ item.subject }}</a> }</div></app-content-card>
+  }
+}

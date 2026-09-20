@@ -1,0 +1,12 @@
+:host { display: block; }
+.management-form { display: grid; gap: 1rem; max-width: 42rem; }
+.management-form__field { display: grid; gap: .4rem; font-weight: 600; color: var(--bs-emphasis-color); }
+.management-form__field input { font-weight: 400; }
+.management-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1.25rem; margin: 0; }
+.management-details div { padding: 1rem; border: 1px solid var(--bs-border-color); border-radius: .6rem; }
+.management-details dt { color: var(--bs-secondary-color); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+.management-details dd { margin: .5rem 0 0; font-weight: 600; }
+.management-links { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; padding: 1rem 1.25rem; border-top: 1px solid var(--bs-border-color); }
+.management-tabs { display: flex; flex-wrap: wrap; gap: .35rem; margin: -0.25rem 0 1.25rem; padding-bottom: .85rem; border-bottom: 1px solid var(--app-border); }
+.management-tabs a { padding: .45rem .7rem; border-radius: .4rem; color: var(--app-text-muted); font-size: .78rem; text-decoration: none; }
+.management-tabs a:hover { background: var(--app-hover-surface); color: var(--app-text); }

@@ -1,0 +1,6 @@
+<app-page-header eyebrow="Tenant management" title="Tenants" description="Manage SaaS customer boundaries and ownership." />
+<app-content-card title="Tenant directory" description="All organizations registered on the platform." [padded]="false">
+  <div class="tenant-toolbar"><span>{{ service.tenants().length }} tenants</span><a class="btn btn-primary" routerLink="/tenants/create">Create tenant</a></div>
+  <app-data-table [columns]="columns" [rows]="service.tenants()" [pageSize]="8" rowLabel="tenant" [rowKey]="(row) => row.id" />
+  <div class="tenant-links">@for (item of service.tenants(); track item.id) { <a [routerLink]="['/tenants', item.id]">View {{ item.name }}</a> }</div>
+</app-content-card>

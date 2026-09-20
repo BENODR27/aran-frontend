@@ -1,0 +1,51 @@
+@if (mode === 'create') {
+  <app-page-header eyebrow="Subscription management" title="Create subscription" description="Assign a commercial plan and billing boundary to a tenant.">
+    <a class="btn btn-outline-secondary" routerLink="/subscriptions">Back to subscriptions</a>
+  </app-page-header>
+  <app-content-card title="Subscription details" description="Choose the tenant and plan for this subscription.">
+    <form class="subscription-form" (ngSubmit)="save()">
+      <label><span>Tenant</span><select class="form-select" name="tenantId" [(ngModel)]="form.tenantId" (ngModelChange)="onTenantChange()" required><option value="" disabled>Select a tenant</option>@for (tenant of tenantService.tenants(); track tenant.id) { <option [value]="tenant.id">{{ tenant.name }} · {{ tenant.plan }}</option> }</select></label>
+      <label><span>Company</span><select class="form-select" name="companyId" [(ngModel)]="form.companyId" (ngModelChange)="onCompanyChange()" required><option value="" disabled>Select a company</option>@for (company of companiesForTenant(); track company.id) { <option [value]="company.id">{{ company.name }} · {{ company.industry }}</option> }</select></label>
+      <fieldset class="facility-picker"><legend>Facilities</legend><details open><summary>Select facilities <span>{{ selectedFacilityIds().size }} selected</span></summary><div class="facility-picker__list">@for (facility of facilitiesForCompany(); track facility.id) { <label><input type="checkbox" [checked]="isFacilitySelected(facility.id)" (change)="toggleFacility(facility.id, checked($event))" /><span>{{ facility.name }}</span><small>{{ facility.location }}</small></label> } @empty { <p>No facilities are available for the selected company.</p> }</div></details></fieldset>
+      <label><span>Plan</span><select class="form-select" name="plan" [(ngModel)]="form.plan"><option>Starter</option><option>Professional</option><option>Enterprise</option></select></label>
+      <label><span>Maximum users</span><input class="form-control" type="number" name="maxUsers" [(ngModel)]="form.maxUsers" min="1" step="1" required /></label>
+      @if (validationError()) { <p class="subscription-form__error" role="alert">{{ validationError() }}</p> }
+      <button class="btn btn-primary" type="submit">Create subscription</button>
+    </form>
+  </app-content-card>
+} @else if (subscription) {
+  <app-page-header eyebrow="Subscription management" [title]="subscription.tenant" description="Monitor plan, billing, usage, and subscription history.">
+    <a class="btn btn-outline-secondary" routerLink="/subscriptions">Back to subscriptions</a>
+  </app-page-header>
+  <nav class="subscription-tabs" aria-label="Subscription sections">
+    @for (item of tabs; track item[0]) {
+      <a [routerLink]="item[1] ? ['/subscriptions', subscription.id, item[1]] : ['/subscriptions', subscription.id]" [class.subscription-tabs__active]="!tab && !item[1] || tab === item[1]">{{ item[0] }}</a>
+    }
+  </nav>
+  @if (!tab) {
+    <section class="subscription-stats">
+      <app-content-card><strong>{{ subscription.plan }}</strong><span>Current plan</span></app-content-card>
+      <app-content-card><strong>{{ subscription.seats }}</strong><span>Licensed seats</span></app-content-card>
+      <app-content-card><strong>{{ subscription.usage }}</strong><span>Seat utilization</span></app-content-card>
+      <app-content-card><app-status-badge [label]="subscription.status" [tone]="statusTone(subscription.status)" /><span>Subscription status</span></app-content-card>
+    </section>
+    <app-content-card title="Subscription overview" description="Commercial and renewal context.">
+      <dl class="subscription-details"><div><dt>Subscription ID</dt><dd>{{ subscription.id }}</dd></div><div><dt>Tenant</dt><dd>{{ subscription.tenant }}</dd></div><div><dt>Renewal date</dt><dd>{{ subscription.renewal }}</dd></div><div><dt>Last updated</dt><dd>{{ subscription.updated }}</dd></div></dl>
+    </app-content-card>
+  } @else {
+    <app-content-card [title]="getActiveTabTitle()" description="Subscription billing, usage, and lifecycle records.">
+      @if (tab === 'history' || tab === 'invoices') {
+        <app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="subscription event" />
+      } @else {
+        <app-data-table [columns]="columns" [rows]="service.subscriptions()" [pageSize]="5" rowLabel="subscription" />
+      }
+    </app-content-card>
+  }
+} @else {
+  <app-page-header eyebrow="Subscription management" title="Subscriptions" description="Manage plans, tenant billing, usage, and subscription lifecycle." />
+  <app-content-card title="Subscription directory" description="Subscriptions configured across all tenants." [padded]="false">
+    <div class="subscription-toolbar"><span>{{ service.subscriptions().length }} subscriptions</span><a class="btn btn-primary" routerLink="/subscriptions/create">Create subscription</a></div>
+    <app-data-table [columns]="columns" [rows]="service.subscriptions()" [pageSize]="8" rowLabel="subscription" [rowKey]="(row) => row.id" />
+    <div class="subscription-links">@for (item of service.subscriptions(); track item.id) { <a [routerLink]="['/subscriptions', item.id]">View {{ item.tenant }}</a> }</div>
+  </app-content-card>
+}
