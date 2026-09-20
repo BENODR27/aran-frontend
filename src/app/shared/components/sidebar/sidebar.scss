@@ -89,6 +89,9 @@
   color: var(--app-sidebar-text) !important;
   opacity: 1;
 }
+.app-sidebar nav a:hover {
+  background: var(--app-sidebar-active);
+}
 .app-sidebar__icon {
   width: 1.25rem;
   color: var(--app-sidebar-accent);

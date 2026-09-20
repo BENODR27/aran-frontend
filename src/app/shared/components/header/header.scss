@@ -15,9 +15,13 @@
   display: none;
   border: 0;
   background: transparent;
-  color: #334155;
+  color: var(--app-text-muted);
   font-size: 1.35rem;
   cursor: pointer;
+}
+.app-header__menu:hover {
+  background: var(--app-hover-surface);
+  color: var(--app-text);
 }
 .app-header__context {
   display: flex;
@@ -49,6 +53,9 @@
   font-size: 1.25rem;
   cursor: pointer;
 }
+.app-header__icon:hover {
+  color: var(--app-primary);
+}
 .app-header__theme select {
   padding: 0.45rem 1.8rem 0.45rem 0.65rem;
   border: 1px solid var(--app-border);
@@ -57,6 +64,13 @@
   color: var(--app-text-muted);
   font-size: 0.75rem;
   cursor: pointer;
+}
+.app-header__theme select:hover,
+.app-header__custom-theme-open:hover,
+.app-header__logout:hover {
+  border-color: var(--app-primary);
+  background: var(--app-hover-surface);
+  color: var(--app-text);
 }
 .app-header__custom-theme {
   position: absolute;
@@ -98,10 +112,19 @@
   font-size: 0.68rem;
   cursor: pointer;
 }
+.app-header__custom-theme button:hover {
+  border-color: var(--app-primary);
+  background: var(--app-hover-surface);
+  color: var(--app-text);
+}
 .app-header__custom-theme-save {
   border-color: var(--app-primary) !important;
   background: var(--app-primary) !important;
   color: #fff !important;
+}
+.app-header__custom-theme-save:hover {
+  border-color: var(--app-primary-hover) !important;
+  background: var(--app-primary-hover) !important;
 }
 .app-header__custom-theme-open {
   padding: 0.45rem 0.65rem;
@@ -127,8 +150,8 @@
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 50%;
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: var(--app-hover-surface);
+  color: var(--app-primary);
   font-size: 0.7rem;
   font-weight: 800;
 }
@@ -138,11 +161,11 @@
   gap: 0.1rem;
 }
 .app-header__identity strong {
-  color: #1e293b;
+  color: var(--app-text);
   font-size: 0.8rem;
 }
 .app-header__identity small {
-  color: #64748b;
+  color: var(--app-text-muted);
   font-size: 0.7rem;
 }
 .app-header__logout {
