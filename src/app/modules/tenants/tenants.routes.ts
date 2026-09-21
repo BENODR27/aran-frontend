@@ -1,15 +1,15 @@
 ﻿import { Routes } from '@angular/router';
-import { TenantCreatePage } from './tenant-create-page';
-import { TenantDetailPage } from './tenant-detail-page';
-import { TenantListPage } from './tenant-list-page';
+import { TenantCreate } from './components/tenant-create/tenant-create';
+import { TenantDetail } from './components/tenant-detail/tenant-detail';
+import { TenantList } from './components/tenant-list/tenant-list';
 
 export const TENANTS_ROUTES: Routes = [
-  { path: '', component: TenantListPage },
-  { path: 'create', component: TenantCreatePage },
-  { path: ':id/companies', component: TenantDetailPage, data: { tab: 'companies' } },
-  { path: ':id/applications', component: TenantDetailPage, data: { tab: 'applications' } },
-  { path: ':id/subscriptions', component: TenantDetailPage, data: { tab: 'subscriptions' } },
-  { path: ':id/users', component: TenantDetailPage, data: { tab: 'users' } },
-  { path: ':id/audit', component: TenantDetailPage, data: { tab: 'audit' } },
-  { path: ':id', component: TenantDetailPage },
+  { path: '', component: TenantList },
+  { path: 'create', component: TenantCreate },
+  { path: ':id/companies', component: TenantDetail, data: { tab: 'companies' } },
+  { path: ':id/applications', component: TenantDetail, data: { tab: 'applications' } },
+  { path: ':id/subscriptions', component: TenantDetail, data: { tab: 'subscriptions' } },
+  { path: ':id/users', component: TenantDetail, data: { tab: 'users' } },
+  { path: ':id/audit', component: TenantDetail, data: { tab: 'audit' } },
+  { path: ':id', component: TenantDetail },
 ];

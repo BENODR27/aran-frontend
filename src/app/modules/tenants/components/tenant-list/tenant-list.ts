@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ContentCard, DataTable, DataTableColumn, PageHeader } from '../../shared/components';
-import { TenantRecord } from './tenant.model';
-import { TenantService } from './tenant.service';
+import { ContentCard, DataTable, DataTableColumn, PageHeader } from '../../../../shared/components';
+import { TenantRecord } from '../../tenant.model';
+import { TenantService } from '../../tenant.service';
 
 @Component({
-  selector: 'app-tenant-list-page',
+  selector: 'app-tenant-list',
   imports: [ContentCard, DataTable, PageHeader, RouterLink],
-  templateUrl: './tenant-list-page.html',
-  styleUrl: './tenant-page.scss',
+  templateUrl: './tenant-list.html',
+  styleUrl: './tenant-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TenantListPage {
+export class TenantList {
   protected readonly service = inject(TenantService);
   protected readonly columns: readonly DataTableColumn<TenantRecord>[] = [
     { key: 'name', header: 'Tenant' },

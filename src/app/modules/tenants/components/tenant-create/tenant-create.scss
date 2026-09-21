@@ -1,0 +1,4 @@
+:host { display: block; }
+.tenant-form { display: grid; gap: 1rem; max-width: 38rem; }
+.tenant-form label { display: grid; gap: .4rem; color: var(--app-text); font-weight: 600; }
+.tenant-form button { width: fit-content; }
