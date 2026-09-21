@@ -1,14 +1,26 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
+import { ApiService } from '../../shared/services/api/api.service';
+import { API_ENDPOINTS } from '../../shared/services/api/api-endpoints.constants';
 import { FacilityActivity, FacilityRecord } from './facility.model';
+import { facilityActions } from './facility.state';
+import { AppState } from '../../app.state';
 
 @Injectable({ providedIn: 'root' })
 export class FacilityService {
-  readonly facilities = signal<FacilityRecord[]>([
-    { id: 'facility-amman', name: 'Amman Central', companyId: 'company-northstar', company: 'Northstar Holdings', location: 'Amman, Jordan', users: 284, status: 'Active', updated: 'Today, 16:12' },
-    { id: 'facility-irbid', name: 'Irbid North', companyId: 'company-cedar', company: 'Cedar Manufacturing', location: 'Irbid, Jordan', users: 146, status: 'Active', updated: 'Yesterday, 14:48' },
-    { id: 'facility-zarqa', name: 'Zarqa Hub', companyId: 'company-atlas', company: 'Atlas Health Group', location: 'Zarqa, Jordan', users: 92, status: 'Review', updated: 'Sep 18, 2026' },
-    { id: 'facility-aqaba', name: 'Aqaba South', companyId: 'company-summit', company: 'Summit Logistics', location: 'Aqaba, Jordan', users: 38, status: 'Inactive', updated: 'Sep 14, 2026' },
-  ]);
+  private readonly store = inject(Store<AppState>);
+  private readonly api = inject(ApiService);
+  readonly facilities = toSignal(
+    this.store.select((state: AppState): readonly FacilityRecord[] => state.facilities.records),
+    { initialValue: [] as readonly FacilityRecord[] },
+  );
+
+  constructor() {
+    this.api.list<FacilityRecord[]>(API_ENDPOINTS.facilities).subscribe((facilities) => {
+      this.store.dispatch(facilityActions.replace({ facilities }));
+    });
+  }
 
   readonly activity: readonly FacilityActivity[] = [
     { event: 'Facility administrator assigned', actor: 'Maya Haddad', resource: 'Amman Central', status: 'Completed', updated: 'Today, 16:12' },
@@ -29,7 +41,7 @@ export class FacilityService {
       status: 'Active',
       updated: 'Just now',
     };
-    this.facilities.update((items) => [facility, ...items]);
+    this.store.dispatch(facilityActions.add({ facility }));
     return facility;
   }
 

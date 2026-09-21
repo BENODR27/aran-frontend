@@ -1,14 +1,26 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
+import { ApiService } from '../../shared/services/api/api.service';
+import { API_ENDPOINTS } from '../../shared/services/api/api-endpoints.constants';
 import { CompanyActivity, CompanyRecord } from './company.model';
+import { companyActions } from './company.state';
+import { AppState } from '../../app.state';
 
 @Injectable({ providedIn: 'root' })
 export class CompanyService {
-  readonly companies = signal<CompanyRecord[]>([
-    { id: 'company-northstar', name: 'Northstar Holdings', tenantId: 'tenant-northstar', tenant: 'Northstar tenant', industry: 'Manufacturing', facilities: 5, users: 684, status: 'Active', updated: 'Today, 16:12' },
-    { id: 'company-cedar', name: 'Cedar Manufacturing', tenantId: 'tenant-cedar', tenant: 'Cedar tenant', industry: 'Industrial production', facilities: 3, users: 312, status: 'Active', updated: 'Yesterday, 14:48' },
-    { id: 'company-atlas', name: 'Atlas Health Group', tenantId: 'tenant-atlas', tenant: 'Atlas tenant', industry: 'Healthcare', facilities: 8, users: 936, status: 'Review', updated: 'Sep 18, 2026' },
-    { id: 'company-summit', name: 'Summit Logistics', tenantId: 'tenant-summit', tenant: 'Summit tenant', industry: 'Logistics', facilities: 2, users: 84, status: 'Suspended', updated: 'Sep 14, 2026' },
-  ]);
+  private readonly store = inject(Store<AppState>);
+  private readonly api = inject(ApiService);
+  readonly companies = toSignal(
+    this.store.select((state: AppState): readonly CompanyRecord[] => state.companies.records),
+    { initialValue: [] as readonly CompanyRecord[] },
+  );
+
+  constructor() {
+    this.api.list<CompanyRecord[]>(API_ENDPOINTS.companies).subscribe((companies) => {
+      this.store.dispatch(companyActions.replace({ companies }));
+    });
+  }
 
   readonly activity: readonly CompanyActivity[] = [
     { event: 'Company administrator assigned', actor: 'Maya Haddad', resource: 'Northstar Holdings', status: 'Completed', updated: 'Today, 16:12' },
@@ -30,7 +42,7 @@ export class CompanyService {
       status: 'Active',
       updated: 'Just now',
     };
-    this.companies.update((items) => [company, ...items]);
+    this.store.dispatch(companyActions.add({ company }));
     return company;
   }
 

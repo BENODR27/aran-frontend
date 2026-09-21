@@ -1,14 +1,26 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
+import { ApiService } from '../../shared/services/api/api.service';
+import { API_ENDPOINTS } from '../../shared/services/api/api-endpoints.constants';
 import { ApplicationActivity, ApplicationRecord } from './application.model';
+import { applicationActions } from './application.state';
+import { AppState } from '../../app.state';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationService {
-  readonly applications = signal<ApplicationRecord[]>([
-    { id: 'app-console', name: 'Operations Console', type: 'Web application', tenant: 'Northstar tenant', users: 684, status: 'Active', updated: 'Today, 16:12' },
-    { id: 'app-billing', name: 'Billing Gateway', type: 'OAuth client', tenant: 'Cedar tenant', users: 312, status: 'Active', updated: 'Yesterday, 14:48' },
-    { id: 'app-partner', name: 'Partner Portal', type: 'SAML application', tenant: 'Atlas tenant', users: 936, status: 'Review', updated: 'Sep 18, 2026' },
-    { id: 'app-legacy', name: 'Legacy Admin Portal', type: 'Web application', tenant: 'Summit tenant', users: 84, status: 'Inactive', updated: 'Sep 14, 2026' },
-  ]);
+  private readonly store = inject(Store<AppState>);
+  private readonly api = inject(ApiService);
+  readonly applications = toSignal(
+    this.store.select((state: AppState): readonly ApplicationRecord[] => state.applications.records),
+    { initialValue: [] as readonly ApplicationRecord[] },
+  );
+
+  constructor() {
+    this.api.list<ApplicationRecord[]>(API_ENDPOINTS.applications).subscribe((applications) => {
+      this.store.dispatch(applicationActions.replace({ applications }));
+    });
+  }
 
   readonly activity: readonly ApplicationActivity[] = [
     { event: 'Application registered', actor: 'Maya Haddad', resource: 'Operations Console', status: 'Completed', updated: 'Today, 16:12' },
@@ -28,7 +40,7 @@ export class ApplicationService {
       status: 'Active',
       updated: 'Just now',
     };
-    this.applications.update((items) => [application, ...items]);
+    this.store.dispatch(applicationActions.add({ application }));
     return application;
   }
 
