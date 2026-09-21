@@ -1,12 +1,14 @@
-﻿import { Routes } from '@angular/router';
-import { ApplicationPage } from './application-page';
+import { Routes } from '@angular/router';
+import { ApplicationList } from './components/application-list/application-list';
+import { ApplicationCreate } from './components/application-create/application-create';
+import { ApplicationDetail } from './components/application-detail/application-detail';
 
 export const APPLICATIONS_ROUTES: Routes = [
-  { path: '', component: ApplicationPage },
-  { path: 'create', component: ApplicationPage, data: { mode: 'create' } },
-  { path: ':id/features', component: ApplicationPage, data: { tab: 'features' } },
-  { path: ':id/roles', component: ApplicationPage, data: { tab: 'roles' } },
-  { path: ':id/permissions', component: ApplicationPage, data: { tab: 'permissions' } },
-  { path: ':id/configuration', component: ApplicationPage, data: { tab: 'configuration' } },
-  { path: ':id', component: ApplicationPage },
+  { path: '', component: ApplicationList },
+  { path: 'create', component: ApplicationCreate, data: { mode: 'create' } },
+  { path: ':id/features', component: ApplicationDetail, data: { tab: 'features' } },
+  { path: ':id/roles', component: ApplicationDetail, data: { tab: 'roles' } },
+  { path: ':id/permissions', component: ApplicationDetail, data: { tab: 'permissions' } },
+  { path: ':id/configuration', component: ApplicationDetail, data: { tab: 'configuration' } },
+  { path: ':id', component: ApplicationDetail },
 ];

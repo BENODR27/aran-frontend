@@ -1,0 +1,49 @@
+@if (mode === 'create') {
+  <app-page-header eyebrow="Facility management" title="Create facility" description="Register a site and define its company access boundary.">
+    <a class="btn btn-outline-secondary" routerLink="/facilities">Back to facilities</a>
+  </app-page-header>
+  <app-content-card title="Facility details" description="Set the facility identity, company, and location.">
+    <form class="facility-form" (ngSubmit)="save()">
+      <label><span>Facility name</span><input class="form-control" name="name" [(ngModel)]="form.name" placeholder="Enter facility name" required /></label>
+      <label><span>Company</span><select class="form-select" name="companyId" [(ngModel)]="form.companyId" required><option value="" disabled>Select a company</option>@for (company of companyService.companies(); track company.id) { <option [value]="company.id">{{ company.name }} · {{ company.industry }}</option> }</select></label>
+      <label><span>Location</span><input class="form-control" name="location" [(ngModel)]="form.location" placeholder="City and country" required /></label>
+      @if (validationError()) { <p class="facility-form__error" role="alert">{{ validationError() }}</p> }
+      <button class="btn btn-primary" type="submit">Create facility</button>
+    </form>
+  </app-content-card>
+} @else if (facility) {
+  <app-page-header eyebrow="Facility management" [title]="facility.name" description="Manage facility users, applications, departments, and access history.">
+    <a class="btn btn-outline-secondary" routerLink="/facilities">Back to facilities</a>
+  </app-page-header>
+  <nav class="facility-tabs" aria-label="Facility sections">
+    @for (item of tabs; track item[0]) {
+      <a [routerLink]="item[1] ? ['/facilities', facility.id, item[1]] : ['/facilities', facility.id]" [class.facility-tabs__active]="!tab && !item[1] || tab === item[1]">{{ item[0] }}</a>
+    }
+  </nav>
+  @if (!tab) {
+    <section class="facility-stats">
+      <app-content-card><strong>{{ facility.users.toLocaleString() }}</strong><span>Users</span></app-content-card>
+      <app-content-card><strong>{{ facility.company }}</strong><span>Company</span></app-content-card>
+      <app-content-card><strong>{{ facility.location }}</strong><span>Location</span></app-content-card>
+      <app-content-card><app-status-badge [label]="facility.status" [tone]="statusTone(facility.status)" /><span>Facility status</span></app-content-card>
+    </section>
+    <app-content-card title="Facility overview" description="Ownership and access context for this facility.">
+      <dl class="facility-details"><div><dt>Facility ID</dt><dd>{{ facility.id }}</dd></div><div><dt>Company</dt><dd>{{ facility.company }}</dd></div><div><dt>Primary owner</dt><dd>Yousef Nasser</dd></div><div><dt>Last updated</dt><dd>{{ facility.updated }}</dd></div></dl>
+    </app-content-card>
+  } @else {
+    <app-content-card [title]="getActiveTabTitle()" description="Facility-scoped records and activity.">
+      @if (tab === 'audit') {
+        <app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="event" />
+      } @else {
+        <app-data-table [columns]="columns" [rows]="service.facilities()" [pageSize]="5" rowLabel="facility" />
+      }
+    </app-content-card>
+  }
+} @else {
+  <app-page-header eyebrow="Facility management" title="Facilities" description="Manage sites, users, applications, and facility access." />
+  <app-content-card title="Facility directory" description="Sites registered across all companies." [padded]="false">
+    <div class="facility-toolbar"><span>{{ service.facilities().length }} facilities</span><a class="btn btn-primary" routerLink="/facilities/create">Create facility</a></div>
+    <app-data-table [columns]="columns" [rows]="service.facilities()" [pageSize]="8" rowLabel="facility" [rowKey]="(row) => row.id" />
+    <div class="facility-links">@for (item of service.facilities(); track item.id) { <a [routerLink]="['/facilities', item.id]">View {{ item.name }}</a> }</div>
+  </app-content-card>
+}

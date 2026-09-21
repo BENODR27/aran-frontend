@@ -1,0 +1,16 @@
+@if (record) {
+  <app-page-header eyebrow="Developer portal" [title]="record.name" description="Review developer resource version, language, and publishing status."><a class="btn btn-outline-secondary" routerLink="/developer-portal/api-docs">Back to portal</a></app-page-header>
+  <section class="developer-stats"><app-content-card><strong>{{ record.type }}</strong><span>Resource type</span></app-content-card><app-content-card><strong>{{ record.version }}</strong><span>Version</span></app-content-card><app-content-card><strong>{{ record.language }}</strong><span>Language</span></app-content-card><app-content-card><app-status-badge [label]="record.status" [tone]="statusTone(record.status)" /><span>Resource status</span></app-content-card></section>
+  <app-content-card title="Developer resource overview" description="Publishing and access context."><dl class="developer-details"><div><dt>Resource ID</dt><dd>{{ record.id }}</dd></div><div><dt>Resource type</dt><dd>{{ record.type }}</dd></div><div><dt>Version</dt><dd>{{ record.version }}</dd></div><div><dt>Last updated</dt><dd>{{ record.updated }}</dd></div></dl></app-content-card>
+} @else {
+  <app-page-header eyebrow="Developer portal" [title]="getActiveTabTitle()" description="Explore API documentation, download SDKs, and manage OAuth applications."></app-page-header>
+  <nav class="developer-tabs" aria-label="Developer Portal sections">@for (item of tabs; track item[0]) { <a [routerLink]="['/developer-portal', item[1]]" [class.developer-tabs__active]="tab === item[1]">{{ item[0] }}</a> }</nav>
+  <section class="developer-stats"><app-content-card><strong>{{ service.metrics.apiRequests }}</strong><span>API requests</span></app-content-card><app-content-card><strong>{{ service.metrics.downloads }}</strong><span>SDK downloads</span></app-content-card><app-content-card><strong>{{ service.metrics.oauthApps }}</strong><span>OAuth applications</span></app-content-card><app-content-card><strong>{{ service.metrics.publishedDocs }}</strong><span>Published documents</span></app-content-card></section>
+  @if (tab === 'oauth-management') {
+    <app-content-card title="OAuth management" description="OAuth applications and redirect security review." [padded]="false"><app-data-table [columns]="columns" [rows]="service.records()" [pageSize]="8" rowLabel="OAuth application" /></app-content-card>
+  } @else if (tab === 'sdk-downloads') {
+    <app-content-card title="SDK downloads" description="Official SDK packages available for integration teams." [padded]="false"><app-data-table [columns]="columns" [rows]="service.records()" [pageSize]="8" rowLabel="SDK resource" /></app-content-card>
+  } @else {
+    <app-content-card title="API documentation" description="Published API references, guides, and developer activity." [padded]="false"><app-data-table [columns]="columns" [rows]="service.records()" [pageSize]="8" rowLabel="developer resource" [rowKey]="(row) => row.id" /><div class="developer-links">@for (item of service.records(); track item.id) { <a [routerLink]="['/developer-portal', item.id]">View {{ item.name }}</a> }</div></app-content-card>
+  }
+}

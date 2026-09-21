@@ -1,0 +1,22 @@
+:host { display: block; }
+.settings-tabs { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--app-border); }
+.settings-tabs a { padding: .65rem .8rem; border-bottom: 2px solid transparent; color: var(--app-text-muted); font-size: .82rem; text-decoration: none; }
+.settings-tabs a:hover, .settings-tabs__active { border-color: var(--app-primary) !important; color: var(--app-primary) !important; }
+.settings-form { display: grid; gap: 1rem; max-width: 38rem; }
+.settings-form label { display: grid; gap: .4rem; color: var(--app-text); font-weight: 600; }
+.settings-status { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1.25rem; }
+.settings-status strong, .settings-status span { display: block; }
+.settings-status strong { color: var(--app-text); font-size: 1.1rem; }
+.settings-status span { margin-top: .35rem; color: var(--app-text-muted); font-size: .78rem; }
+.theme-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.theme-option { display: flex; align-items: center; gap: .75rem; min-height: 6rem; padding: 1rem; border: 1px solid var(--app-border); border-radius: .65rem; background: var(--app-surface); color: var(--app-text); text-align: left; }
+.theme-option:hover, .theme-option__active { border-color: var(--app-primary); box-shadow: 0 0 0 2px color-mix(in srgb, var(--app-primary) 15%, transparent); }
+.theme-option strong, .theme-option small { display: block; }
+.theme-option small { margin-top: .25rem; color: var(--app-text-muted); font-size: .72rem; }
+.theme-option app-status-badge { margin-left: auto; }
+.theme-option__swatch { width: 1.6rem; height: 1.6rem; flex: 0 0 auto; border-radius: .4rem; }
+.theme-option__swatch--light { background: linear-gradient(135deg, #ffffff 50%, #e2e8f0 50%); border: 1px solid #cbd5e1; }
+.theme-option__swatch--dark { background: linear-gradient(135deg, #1e293b 50%, #0f172a 50%); }
+.theme-option__swatch--custom { background: linear-gradient(135deg, var(--app-primary) 50%, var(--app-sidebar) 50%); }
+.settings-note { margin: 0; color: var(--app-text-muted); font-size: .85rem; }
+@media (max-width: 800px) { .theme-options { grid-template-columns: 1fr; } .settings-status { grid-template-columns: 1fr; } }

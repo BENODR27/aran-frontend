@@ -157,6 +157,14 @@ The generic management module remains a fallback, but dedicated module screens a
 {environment.apiUrl}/api/{resource}
 ```
 
+The resource service accepts both direct payloads and the standard response envelope:
+
+```ts
+{ data: T, message?: string, success?: boolean }
+```
+
+Consumers receive the typed `data` value, so page and feature code does not need to know which response format the backend uses.
+
 Current environment values are in `src/app/shared/environments/environment.ts`:
 
 - API: `http://10.50.1.225:3000`

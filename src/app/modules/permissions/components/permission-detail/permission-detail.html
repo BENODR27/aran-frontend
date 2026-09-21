@@ -1,0 +1,61 @@
+@if (mode === 'create') {
+  <app-page-header eyebrow="Permission management" title="Create permission" description="Create a granular capability for roles and applications.">
+    <a class="btn btn-outline-secondary" routerLink="/permissions">Back to permissions</a>
+  </app-page-header>
+  <app-content-card title="Permission details" description="Define the resource and action controlled by this permission.">
+    <form class="permission-form" (ngSubmit)="save()">
+      <label><span>Application</span><select class="form-select" name="applicationId" [(ngModel)]="form.applicationId" required><option value="" disabled>Select an application</option>@for (application of applicationService.applications(); track application.id) { <option [value]="application.id">{{ application.name }} · {{ application.type }}</option> }</select></label>
+      <label><span>Permission name</span><input class="form-control" name="name" [(ngModel)]="form.name" placeholder="Example: Users: Read" required /></label>
+      <label><span>Resource</span><input class="form-control" name="resource" [(ngModel)]="form.resource" placeholder="Example: Users" required /></label>
+      <label><span>Action</span><input class="form-control" name="action" [(ngModel)]="form.action" placeholder="Example: Read" required /></label>
+      <section class="permission-tree">
+        <div class="permission-tree__header"><div><strong>Permission scope</strong><small>Choose one or more resource actions for this capability.</small></div><span>{{ selectedActions().size }} selected</span></div>
+        @for (group of resourceGroups; track group.name) {
+          <div class="resource-group">
+            <button class="resource-group__header" type="button" (click)="toggleResource(group.name)"><span>{{ isResourceExpanded(group.name) ? '⌄' : '›' }}</span><strong>{{ group.name }}</strong><small>{{ group.actions.length }} actions</small></button>
+            @if (isResourceExpanded(group.name)) {
+              <div class="resource-group__body"><label class="permission-check permission-check--all"><input type="checkbox" [checked]="isResourceSelected(group.name, group.actions)" (change)="toggleResourceActions(group.name, group.actions, checked($event))" /><span>Select all {{ group.name }} actions</span></label>@for (action of group.actions; track action) { <label class="permission-check"><input type="checkbox" [checked]="isActionSelected(group.name, action)" (change)="toggleAction(group.name, action, checked($event))" /><span>{{ action }}</span><code>{{ actionKey(group.name, action) }}</code></label> }</div>
+            }
+          </div>
+        }
+      </section>
+      @if (validationError()) { <p class="permission-form__error" role="alert">{{ validationError() }}</p> }
+      <button class="btn btn-primary" type="submit">Create permission</button>
+    </form>
+  </app-content-card>
+} @else if (permission) {
+  <app-page-header eyebrow="Permission management" [title]="permission.name" description="Review granular access capability, assignments, and usage context.">
+    <a class="btn btn-outline-secondary" routerLink="/permissions">Back to permissions</a>
+  </app-page-header>
+  <nav class="permission-tabs" aria-label="Permission sections">
+    @for (item of tabs; track item[0]) {
+      <a [routerLink]="item[1] ? ['/permissions', permission.id, item[1]] : ['/permissions', permission.id]" [class.permission-tabs__active]="!tab && !item[1] || tab === item[1]">{{ item[0] }}</a>
+    }
+  </nav>
+  @if (!tab) {
+    <section class="permission-stats">
+      <app-content-card><strong>{{ permission.roles }}</strong><span>Assigned roles</span></app-content-card>
+      <app-content-card><strong>{{ permission.applications }}</strong><span>Applications</span></app-content-card>
+      <app-content-card><strong>{{ permission.resource }}</strong><span>Resource</span></app-content-card>
+      <app-content-card><app-status-badge [label]="permission.status" [tone]="statusTone(permission.status)" /><span>Permission status</span></app-content-card>
+    </section>
+    <app-content-card title="Permission overview" description="Capability definition and governance context.">
+      <dl class="permission-details"><div><dt>Permission ID</dt><dd>{{ permission.id }}</dd></div><div><dt>Resource</dt><dd>{{ permission.resource }}</dd></div><div><dt>Action</dt><dd>{{ permission.action }}</dd></div><div><dt>Last updated</dt><dd>{{ permission.updated }}</dd></div></dl>
+    </app-content-card>
+  } @else {
+    <app-content-card [title]="getActiveTabTitle()" description="Permission catalog and access governance records.">
+      @if (tab === 'matrix') {
+        <app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="permission change" />
+      } @else {
+        <app-data-table [columns]="columns" [rows]="service.permissions()" [pageSize]="5" rowLabel="permission" />
+      }
+    </app-content-card>
+  }
+} @else {
+  <app-page-header eyebrow="Permission management" title="Permissions" description="Control granular capabilities across roles, applications, and tenants." />
+  <app-content-card title="Permission catalog" description="Permissions configured across the platform." [padded]="false">
+    <div class="permission-toolbar"><span>{{ service.permissions().length }} permissions</span><a class="btn btn-primary" routerLink="/permissions/create">Create permission</a></div>
+    <app-data-table [columns]="columns" [rows]="service.permissions()" [pageSize]="8" rowLabel="permission" [rowKey]="(row) => row.id" />
+    <div class="permission-links">@for (item of service.permissions(); track item.id) { <a [routerLink]="['/permissions', item.id]">View {{ item.name }}</a> }</div>
+  </app-content-card>
+}

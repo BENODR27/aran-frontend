@@ -1,0 +1,12 @@
+<app-page-header eyebrow="Company management" title="Create company" description="Register a company within a tenant and define its operating context.">
+  <a class="btn btn-outline-secondary" routerLink="/companies">Back to companies</a>
+</app-page-header>
+<app-content-card title="Company details" description="Set the company identity and tenant relationship.">
+  <form class="company-form" (ngSubmit)="save()">
+    <label><span>Company name</span><input class="form-control" name="name" [(ngModel)]="form.name" placeholder="Enter company name" required /></label>
+    <label><span>Tenant</span><select class="form-select" name="tenantId" [(ngModel)]="form.tenantId" required><option value="" disabled>Select a tenant</option>@for (tenant of tenantService.tenants(); track tenant.id) { <option [value]="tenant.id">{{ tenant.name }} · {{ tenant.plan }}</option> }</select></label>
+    <label><span>Industry</span><select class="form-select" name="industry" [(ngModel)]="form.industry"><option>Manufacturing</option><option>Healthcare</option><option>Logistics</option><option>Technology</option><option>Other</option></select></label>
+    @if (validationError()) { <p class="company-form__error" role="alert">{{ validationError() }}</p> }
+    <button class="btn btn-primary" type="submit">Create company</button>
+  </form>
+</app-content-card>

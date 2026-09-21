@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
-import { SettingsPage } from './settings-page';
+import { SettingsList } from './components/settings-list/settings-list';
+import { SettingsDetail } from './components/settings-detail/settings-detail';
 
 export const SETTINGS_ROUTES: Routes = [
-  { path: '', component: SettingsPage, data: { tab: 'general' } },
-  { path: 'general', component: SettingsPage, data: { tab: 'general' } },
-  { path: 'email', component: SettingsPage, data: { tab: 'email' } },
-  { path: 'localization', component: SettingsPage, data: { tab: 'localization' } },
-  { path: 'theme', component: SettingsPage, data: { tab: 'theme' } },
+  { path: '', component: SettingsList },
+  { path: 'general', component: SettingsDetail, data: { tab: 'general' } },
+  { path: 'email', component: SettingsDetail, data: { tab: 'email' } },
+  { path: 'localization', component: SettingsDetail, data: { tab: 'localization' } },
+  { path: 'theme', component: SettingsDetail, data: { tab: 'theme' } },
+  { path: ':id', component: SettingsDetail },
 ];

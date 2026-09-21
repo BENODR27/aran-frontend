@@ -1,14 +1,16 @@
 ﻿import { Routes } from '@angular/router';
-import { CompanyPage } from './company-page';
+import { CompanyCreate } from './components/company-create/company-create';
+import { CompanyDetail } from './components/company-detail/company-detail';
+import { CompanyList } from './components/company-list/company-list';
 
 export const COMPANIES_ROUTES: Routes = [
-  { path: '', component: CompanyPage },
-  { path: 'create', component: CompanyPage, data: { mode: 'create' } },
-  { path: ':id/facilities', component: CompanyPage, data: { tab: 'facilities' } },
-  { path: ':id/users', component: CompanyPage, data: { tab: 'users' } },
-  { path: ':id/applications', component: CompanyPage, data: { tab: 'applications' } },
-  { path: ':id/features', component: CompanyPage, data: { tab: 'features' } },
-  { path: ':id/subscriptions', component: CompanyPage, data: { tab: 'subscriptions' } },
-  { path: ':id/audit', component: CompanyPage, data: { tab: 'audit' } },
-  { path: ':id', component: CompanyPage },
+  { path: '', component: CompanyList },
+  { path: 'create', component: CompanyCreate },
+  { path: ':id/facilities', component: CompanyDetail, data: { tab: 'facilities' } },
+  { path: ':id/users', component: CompanyDetail, data: { tab: 'users' } },
+  { path: ':id/applications', component: CompanyDetail, data: { tab: 'applications' } },
+  { path: ':id/features', component: CompanyDetail, data: { tab: 'features' } },
+  { path: ':id/subscriptions', component: CompanyDetail, data: { tab: 'subscriptions' } },
+  { path: ':id/audit', component: CompanyDetail, data: { tab: 'audit' } },
+  { path: ':id', component: CompanyDetail },
 ];

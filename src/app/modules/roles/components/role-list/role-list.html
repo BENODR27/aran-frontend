@@ -1,0 +1,64 @@
+@if (mode === 'create') {
+  <app-page-header eyebrow="Role management" title="Create role" description="Create a reusable authorization role and define its tenant boundary.">
+    <a class="btn btn-outline-secondary" routerLink="/roles">Back to roles</a>
+  </app-page-header>
+  <app-content-card title="Role details" description="Define the role identity before assigning permissions and applications.">
+    <form class="role-form" (ngSubmit)="save()">
+      <label><span>Role name</span><input class="form-control" name="name" [(ngModel)]="form.name" placeholder="Enter role name" required /></label>
+      <label><span>Tenant</span><select class="form-select" name="tenantId" [(ngModel)]="form.tenantId" required><option value="" disabled>Select a tenant</option>@for (tenant of tenantService.tenants(); track tenant.id) { <option [value]="tenant.id">{{ tenant.name }} · {{ tenant.plan }}</option> }</select></label>
+      <section class="permission-picker">
+        <div class="permission-picker__header"><div><strong>Select applications</strong><small>Choose the applications this role can access first.</small></div><span>{{ selectedApplicationIds().size }} selected</span></div>
+        <div class="application-checks">@for (application of applicationService.applications(); track application.id) { <label class="permission-check"><input type="checkbox" [checked]="isApplicationSelected(application.id)" (change)="toggleApplication(application.id, checked($event))" /><span>{{ application.name }}</span><code>{{ application.type }}</code></label> }</div>
+        <div class="permission-picker__header"><div><strong>Assign permissions</strong><small>Choose one or more permissions from the selected applications.</small></div><span>{{ selectedPermissions().size }} selected</span></div>
+        @for (group of permissionGroups(); track group.name) {
+          <div class="permission-group">
+            <button class="permission-group__header" type="button" (click)="toggleGroup(group.name)"><span>{{ isGroupExpanded(group.name) ? '⌄' : '›' }}</span><strong>{{ group.name }}</strong><small>{{ group.permissions.length }} permissions</small></button>
+            @if (isGroupExpanded(group.name)) {
+              <div class="permission-group__body"><label class="permission-check permission-check--all"><input type="checkbox" [checked]="isGroupSelected(group.permissions)" (change)="toggleGroupPermissions(group.permissions, checked($event))" /><span>Select all {{ group.name }} permissions</span></label>@for (permission of group.permissions; track permission.id) { <label class="permission-check"><input type="checkbox" [checked]="isPermissionSelected(permission.id)" (change)="togglePermission(permission.id, checked($event))" /><span>{{ permission.label }}</span><code>{{ permission.id }}</code></label> }</div>
+            }
+          </div>
+        } @empty {
+          <p class="permission-picker__empty">Select one or more applications to view their permissions.</p>
+        }
+      </section>
+      @if (validationError()) { <p class="role-form__error" role="alert">{{ validationError() }}</p> }
+      <button class="btn btn-primary" type="submit">Create role</button>
+    </form>
+  </app-content-card>
+} @else if (role) {
+  <app-page-header eyebrow="Role management" [title]="role.name" description="Manage permissions, application access, features, and facility scope.">
+    <a class="btn btn-outline-secondary" routerLink="/roles">Back to roles</a>
+  </app-page-header>
+  <nav class="role-tabs" aria-label="Role sections">
+    @for (item of tabs; track item[0]) {
+      <a [routerLink]="item[1] ? ['/roles', role.id, item[1]] : ['/roles', role.id]" [class.role-tabs__active]="!tab && !item[1] || tab === item[1]">{{ item[0] }}</a>
+    }
+  </nav>
+  @if (!tab) {
+    <section class="role-stats">
+      <app-content-card><strong>{{ role.permissions }}</strong><span>Permissions</span></app-content-card>
+      <app-content-card><strong>{{ role.applications }}</strong><span>Applications</span></app-content-card>
+      <app-content-card><strong>{{ role.assignments }}</strong><span>Assignments</span></app-content-card>
+      <app-content-card><app-status-badge [label]="role.status" [tone]="statusTone(role.status)" /><span>Role status</span></app-content-card>
+    </section>
+    <app-content-card title="Role overview" description="Authorization and ownership context.">
+      <dl class="role-details"><div><dt>Role ID</dt><dd>{{ role.id }}</dd></div><div><dt>Tenant</dt><dd>{{ role.tenant }}</dd></div><div><dt>Applications</dt><dd>{{ role.applicationIds.length }}</dd></div><div><dt>Primary owner</dt><dd>Platform Admin</dd></div><div><dt>Last updated</dt><dd>{{ role.updated }}</dd></div></dl>
+      @if (role.permissionIds?.length) { <div class="assigned-permissions"><strong>Assigned permission keys</strong><div>@for (permissionId of role.permissionIds; track permissionId) { <code>{{ permissionId }}</code> }</div></div> }
+    </app-content-card>
+  } @else {
+    <app-content-card [title]="getActiveTabTitle()" description="Role-scoped access configuration and recent changes.">
+      @if (tab === 'permissions') {
+        <app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="permission change" />
+      } @else {
+        <app-data-table [columns]="columns" [rows]="service.roles()" [pageSize]="5" rowLabel="role" />
+      }
+    </app-content-card>
+  }
+} @else {
+  <app-page-header eyebrow="Role management" title="Roles" description="Define reusable authorization policies across tenants and applications." />
+  <app-content-card title="Role directory" description="Roles configured across all tenants." [padded]="false">
+    <div class="role-toolbar"><span>{{ service.roles().length }} roles</span><a class="btn btn-primary" routerLink="/roles/create">Create role</a></div>
+    <app-data-table [columns]="columns" [rows]="service.roles()" [pageSize]="8" rowLabel="role" [rowKey]="(row) => row.id" />
+    <div class="role-links">@for (item of service.roles(); track item.id) { <a [routerLink]="['/roles', item.id]">View {{ item.name }}</a> }</div>
+  </app-content-card>
+}

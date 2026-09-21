@@ -1,0 +1,48 @@
+@if (mode === 'create') {
+  <app-page-header eyebrow="Feature management" title="Create feature" description="Define a feature entitlement that can be assigned and overridden by scope.">
+    <a class="btn btn-outline-secondary" routerLink="/features">Back to features</a>
+  </app-page-header>
+  <app-content-card title="Feature details" description="Set the feature identity and category.">
+    <form class="feature-form" (ngSubmit)="save()">
+      <label><span>Feature name</span><input class="form-control" name="name" [(ngModel)]="form.name" placeholder="Enter feature name" required /></label>
+      <label><span>Feature key</span><input class="form-control" name="key" [(ngModel)]="form.key" placeholder="Example: security.mfa" required /></label>
+      <label><span>Category</span><input class="form-control" name="category" [(ngModel)]="form.category" placeholder="Example: Security" required /></label>
+      <button class="btn btn-primary" type="submit">Create feature</button>
+    </form>
+  </app-content-card>
+} @else if (feature) {
+  <app-page-header eyebrow="Feature management" [title]="feature.name" description="Manage enablement, overrides, schedules, and tenant assignments.">
+    <a class="btn btn-outline-secondary" routerLink="/features">Back to features</a>
+  </app-page-header>
+  <nav class="feature-tabs" aria-label="Feature sections">
+    @for (item of tabs; track item[0]) {
+      <a [routerLink]="item[1] ? ['/features', feature.id, item[1]] : ['/features', feature.id]" [class.feature-tabs__active]="!tab && !item[1] || tab === item[1]">{{ item[0] }}</a>
+    }
+  </nav>
+  @if (!tab) {
+    <section class="feature-stats">
+      <app-content-card><strong>{{ feature.assignments }}</strong><span>Assignments</span></app-content-card>
+      <app-content-card><strong>{{ feature.overrides }}</strong><span>Overrides</span></app-content-card>
+      <app-content-card><strong>{{ feature.category }}</strong><span>Category</span></app-content-card>
+      <app-content-card><app-status-badge [label]="feature.status" [tone]="statusTone(feature.status)" /><span>Feature status</span></app-content-card>
+    </section>
+    <app-content-card title="Feature overview" description="Entitlement definition and rollout context.">
+      <dl class="feature-details"><div><dt>Feature ID</dt><dd>{{ feature.id }}</dd></div><div><dt>Feature key</dt><dd>{{ feature.key }}</dd></div><div><dt>Category</dt><dd>{{ feature.category }}</dd></div><div><dt>Last updated</dt><dd>{{ feature.updated }}</dd></div></dl>
+    </app-content-card>
+  } @else {
+    <app-content-card [title]="getActiveTabTitle()" description="Feature assignment and rollout governance records.">
+      @if (tab === 'overrides' || tab === 'schedule') {
+        <app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="feature event" />
+      } @else {
+        <app-data-table [columns]="columns" [rows]="service.features()" [pageSize]="5" rowLabel="feature" />
+      }
+    </app-content-card>
+  }
+} @else {
+  <app-page-header eyebrow="Feature management" title="Features" description="Configure entitlement switches, overrides, schedules, and tenant assignments." />
+  <app-content-card title="Feature catalog" description="Features configured across the platform." [padded]="false">
+    <div class="feature-toolbar"><span>{{ service.features().length }} features</span><a class="btn btn-primary" routerLink="/features/create">Create feature</a></div>
+    <app-data-table [columns]="columns" [rows]="service.features()" [pageSize]="8" rowLabel="feature" [rowKey]="(row) => row.id" />
+    <div class="feature-links">@for (item of service.features(); track item.id) { <a [routerLink]="['/features', item.id]">View {{ item.name }}</a> }</div>
+  </app-content-card>
+}

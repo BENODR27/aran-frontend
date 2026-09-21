@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
-import { AuditPage } from './audit-page';
+import { AuditList } from './components/audit-list/audit-list';
+import { AuditDetail } from './components/audit-detail/audit-detail';
 
 export const AUDIT_ROUTES: Routes = [
-  { path: '', component: AuditPage, data: { tab: 'logs' } },
-  { path: 'logs', component: AuditPage, data: { tab: 'logs' } },
-  { path: 'timeline', component: AuditPage, data: { tab: 'timeline' } },
-  { path: ':id', component: AuditPage },
+  { path: '', component: AuditList },
+  { path: 'logs', component: AuditDetail, data: { tab: 'logs' } },
+  { path: 'timeline', component: AuditDetail, data: { tab: 'timeline' } },
+  { path: ':id', component: AuditDetail },
 ];

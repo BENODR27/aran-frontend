@@ -1,0 +1,25 @@
+<app-page-header eyebrow="System settings" [title]="getActiveTabTitle()" description="Configure global platform behavior, communications, localization, and appearance.">
+  <button class="btn btn-primary" type="button" (click)="save()">Save changes</button>
+</app-page-header>
+<nav class="settings-tabs" aria-label="System settings sections">@for (item of tabs; track item[0]) { <a [routerLink]="['/settings', item[1]]" [class.settings-tabs__active]="tab === item[1]">{{ item[0] }}</a> }</nav>
+
+@if (tab === 'email') {
+  <app-content-card title="Email settings" description="Configure the sender identity and delivery provider for platform notifications.">
+    <div class="settings-form"><label><span>Email provider</span><select class="form-select" [(ngModel)]="form.emailProvider"><option>Amazon SES</option><option>SendGrid</option><option>SMTP relay</option></select></label><label><span>From address</span><input class="form-control" [(ngModel)]="form.emailFrom" /></label><label><span>Support email</span><input class="form-control" [(ngModel)]="form.supportEmail" /></label></div>
+  </app-content-card>
+  <section class="settings-status"><app-content-card><app-status-badge label="Connected" tone="success" /><span>Email provider status</span></app-content-card><app-content-card><strong>98.6%</strong><span>Delivery rate</span></app-content-card><app-content-card><strong>1,842</strong><span>Messages sent today</span></app-content-card></section>
+} @else if (tab === 'localization') {
+  <app-content-card title="Localization settings" description="Set default regional preferences for new tenants and platform reports.">
+    <div class="settings-form"><label><span>Default locale</span><select class="form-select" [(ngModel)]="form.defaultLocale"><option>en-US</option><option>en-GB</option><option>ar-JO</option><option>fr-FR</option></select></label><label><span>Default timezone</span><select class="form-select" [(ngModel)]="form.defaultTimezone"><option>Asia/Amman</option><option>Asia/Dubai</option><option>Europe/London</option><option>America/New_York</option></select></label><label><span>Date format</span><select class="form-select" [(ngModel)]="form.dateFormat"><option>MMM dd, yyyy</option><option>dd/MM/yyyy</option><option>yyyy-MM-dd</option></select></label></div>
+  </app-content-card>
+} @else if (tab === 'theme') {
+  <app-content-card title="Theme settings" description="Choose the appearance used across the IAM administration console.">
+    <div class="theme-options">@for (option of themeOptions; track option.value) { <button type="button" class="theme-option" [class.theme-option__active]="themeService.theme() === option.value" (click)="changeTheme(option.value)"><span class="theme-option__swatch theme-option__swatch--{{ option.value }}"></span><span><strong>{{ option.label }}</strong><small>{{ option.description }}</small></span>@if (themeService.theme() === option.value) { <app-status-badge label="Active" tone="success" /> }</button> }</div>
+  </app-content-card>
+  <app-content-card title="Custom colors" description="Custom brand colors are managed from the header theme editor."><p class="settings-note">Use the header theme selector to edit primary, surface, background, and sidebar colors.</p></app-content-card>
+} @else {
+  <app-content-card title="General settings" description="Configure the identity and support details shown across the platform.">
+    <div class="settings-form"><label><span>Platform name</span><input class="form-control" [(ngModel)]="form.platformName" /></label><label><span>Support email</span><input class="form-control" [(ngModel)]="form.supportEmail" /></label><label><span>Default timezone</span><select class="form-select" [(ngModel)]="form.defaultTimezone"><option>Asia/Amman</option><option>Asia/Dubai</option><option>Europe/London</option></select></label></div>
+  </app-content-card>
+  <section class="settings-status"><app-content-card><strong>Operational</strong><span>Platform status</span></app-content-card><app-content-card><strong>v2.4.0</strong><span>Application version</span></app-content-card><app-content-card><strong>UTC+03:00</strong><span>Server time</span></app-content-card></section>
+}

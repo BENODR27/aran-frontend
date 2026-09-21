@@ -1,0 +1,50 @@
+@if (mode === 'create') {
+  <app-page-header eyebrow="Group management" title="Create group" description="Create a reusable access group and assign it to a tenant.">
+    <a class="btn btn-outline-secondary" routerLink="/groups">Back to groups</a>
+  </app-page-header>
+  <app-content-card title="Group details" description="Define the group identity and tenant boundary.">
+    <form class="group-form" (ngSubmit)="save()">
+      <label><span>Group name</span><input class="form-control" name="name" [(ngModel)]="form.name" placeholder="Enter group name" required /></label>
+      <label><span>Tenant</span><input class="form-control" name="tenant" [(ngModel)]="form.tenant" placeholder="Assign a tenant" required /></label>
+      <fieldset class="access-picker"><legend>Application access</legend><details open><summary>Select applications <span>{{ selectedApplicationIds().size }} selected</span></summary><div class="access-picker__list">@for (application of applicationService.applications(); track application.id) { <label><input type="checkbox" [checked]="isApplicationSelected(application.id)" (change)="toggleApplication(application.id, checked($event))" /><span>{{ application.name }}</span><small>{{ application.type }}</small></label> }</div></details></fieldset>
+      <fieldset class="access-picker"><legend>Role access</legend><details open><summary>Select roles for selected applications <span>{{ selectedRoleIds().size }} selected</span></summary><div class="access-picker__groups">@for (application of applicationService.applications(); track application.id) { @if (isApplicationSelected(application.id)) { <details open><summary>{{ application.name }} <span>{{ rolesForApplication(application.id).length }} roles</span></summary><div class="access-picker__list">@for (role of rolesForApplication(application.id); track role.id) { <label><input type="checkbox" [checked]="isRoleSelected(role.id)" (change)="toggleRole(role.id, checked($event))" /><span>{{ role.name }}</span><small>{{ role.permissions }} permissions</small></label> } @empty { <p>No roles are assigned to this application.</p> }</div></details> } }</div></details></fieldset>
+      @if (validationError()) { <p class="group-form__error" role="alert">{{ validationError() }}</p> }
+      <button class="btn btn-primary" type="submit">Create group</button>
+    </form>
+  </app-content-card>
+} @else if (group) {
+  <app-page-header eyebrow="Group management" [title]="group.name" description="Manage group members, roles, permissions, and facility scope.">
+    <a class="btn btn-outline-secondary" routerLink="/groups">Back to groups</a>
+  </app-page-header>
+  <nav class="group-tabs" aria-label="Group sections">
+    @for (item of tabs; track item[0]) {
+      <a [routerLink]="item[1] ? ['/groups', group.id, item[1]] : ['/groups', group.id]" [class.group-tabs__active]="!tab && !item[1] || tab === item[1]">{{ item[0] }}</a>
+    }
+  </nav>
+  @if (!tab) {
+    <section class="group-stats">
+      <app-content-card><strong>{{ group.members }}</strong><span>Members</span></app-content-card>
+      <app-content-card><strong>{{ group.roles }}</strong><span>Assigned roles</span></app-content-card>
+      <app-content-card><strong>{{ group.tenant }}</strong><span>Tenant</span></app-content-card>
+      <app-content-card><app-status-badge [label]="group.status" [tone]="statusTone(group.status)" /><span>Group status</span></app-content-card>
+    </section>
+    <app-content-card title="Group overview" description="Membership and authorization context.">
+      <dl class="group-details"><div><dt>Group ID</dt><dd>{{ group.id }}</dd></div><div><dt>Tenant</dt><dd>{{ group.tenant }}</dd></div><div><dt>Primary owner</dt><dd>Platform Admin</dd></div><div><dt>Last updated</dt><dd>{{ group.updated }}</dd></div></dl>
+    </app-content-card>
+  } @else {
+    <app-content-card [title]="getActiveTabTitle()" description="Group-scoped access configuration.">
+      @if (tab === 'permissions') {
+        <app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="permission" />
+      } @else {
+        <app-data-table [columns]="columns" [rows]="service.groups()" [pageSize]="5" rowLabel="group" />
+      }
+    </app-content-card>
+  }
+} @else {
+  <app-page-header eyebrow="Group management" title="Groups" description="Organize users and apply reusable access policies." />
+  <app-content-card title="Group directory" description="Groups configured across all tenants." [padded]="false">
+    <div class="group-toolbar"><span>{{ service.groups().length }} groups</span><a class="btn btn-primary" routerLink="/groups/create">Create group</a></div>
+    <app-data-table [columns]="columns" [rows]="service.groups()" [pageSize]="8" rowLabel="group" [rowKey]="(row) => row.id" />
+    <div class="group-links">@for (item of service.groups(); track item.id) { <a [routerLink]="['/groups', item.id]">View {{ item.name }}</a> }</div>
+  </app-content-card>
+}

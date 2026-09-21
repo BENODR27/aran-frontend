@@ -1,0 +1,5 @@
+:host { display: block; }
+.company-form { display: grid; gap: 1rem; max-width: 38rem; }
+.company-form label { display: grid; gap: .4rem; color: var(--app-text); font-weight: 600; }
+.company-form button { width: fit-content; }
+.company-form__error { margin: 0; color: var(--app-danger, #b42318); font-size: .8rem; }

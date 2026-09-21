@@ -1,11 +1,13 @@
-﻿import { Routes } from '@angular/router';
-import { PermissionPage } from './permission-page';
+import { Routes } from '@angular/router';
+import { PermissionList } from './components/permission-list/permission-list';
+import { PermissionCreate } from './components/permission-create/permission-create';
+import { PermissionDetail } from './components/permission-detail/permission-detail';
 
 export const PERMISSIONS_ROUTES: Routes = [
-  { path: '', component: PermissionPage },
-  { path: 'create', component: PermissionPage, data: { mode: 'create' } },
-  { path: ':id/catalog', component: PermissionPage, data: { tab: 'catalog' } },
-  { path: ':id/tree', component: PermissionPage, data: { tab: 'tree' } },
-  { path: ':id/matrix', component: PermissionPage, data: { tab: 'matrix' } },
-  { path: ':id', component: PermissionPage },
+  { path: '', component: PermissionList },
+  { path: 'create', component: PermissionCreate, data: { mode: 'create' } },
+  { path: ':id/catalog', component: PermissionDetail, data: { tab: 'catalog' } },
+  { path: ':id/tree', component: PermissionDetail, data: { tab: 'tree' } },
+  { path: ':id/matrix', component: PermissionDetail, data: { tab: 'matrix' } },
+  { path: ':id', component: PermissionDetail },
 ];

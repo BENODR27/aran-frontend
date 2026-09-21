@@ -1,30 +1,13 @@
-﻿import { Routes } from '@angular/router';
-import { SecurityPage } from './security-page';
+import { Routes } from '@angular/router';
+import { SecurityList } from './components/security-list/security-list';
+import { SecurityDetail } from './components/security-detail/security-detail';
 
 export const SECURITY_ROUTES: Routes = [
-  { path: '', component: SecurityPage },
-  { path: 'dashboard', component: SecurityPage, data: { tab: 'dashboard' } },
-  { path: 'security-center', component: SecurityPage, data: { tab: 'dashboard' } },
-  { path: 'session-management', component: SecurityPage, data: { tab: 'session-management' } },
-  { path: 'password-policies', component: SecurityPage, data: { tab: 'password-policies' } },
-  { path: 'ip-restrictions', component: SecurityPage, data: { tab: 'ip-restrictions' } },
-  { path: 'tenant-management', redirectTo: '/tenants', pathMatch: 'full' },
-  { path: 'companies', redirectTo: '/companies', pathMatch: 'full' },
-  { path: 'facilities', redirectTo: '/facilities', pathMatch: 'full' },
-  { path: 'users', redirectTo: '/users', pathMatch: 'full' },
-  { path: 'groups', redirectTo: '/groups', pathMatch: 'full' },
-  { path: 'roles', redirectTo: '/roles', pathMatch: 'full' },
-  { path: 'permissions', redirectTo: '/permissions', pathMatch: 'full' },
-  { path: 'applications', redirectTo: '/applications', pathMatch: 'full' },
-  { path: 'subscriptions', redirectTo: '/subscriptions', pathMatch: 'full' },
-  { path: 'plans', redirectTo: '/plans', pathMatch: 'full' },
-  { path: 'features', redirectTo: '/features', pathMatch: 'full' },
-  { path: 'api-management', redirectTo: '/api-management', pathMatch: 'full' },
-  { path: 'audit-logs', redirectTo: '/audit/logs', pathMatch: 'full' },
-  { path: 'notifications', redirectTo: '/notifications', pathMatch: 'full' },
-  { path: 'billing', redirectTo: '/billing', pathMatch: 'full' },
-  { path: 'integrations', redirectTo: '/integrations', pathMatch: 'full' },
-  { path: 'developer-portal', redirectTo: '/developer-portal', pathMatch: 'full' },
-  { path: 'system-settings', redirectTo: '/settings', pathMatch: 'full' },
-  { path: ':id', component: SecurityPage },
+  { path: '', component: SecurityList },
+  { path: 'dashboard', component: SecurityDetail, data: { tab: 'dashboard' } },
+  { path: 'security-center', component: SecurityDetail, data: { tab: 'security-center' } },
+  { path: 'session-management', component: SecurityDetail, data: { tab: 'session-management' } },
+  { path: 'password-policies', component: SecurityDetail, data: { tab: 'password-policies' } },
+  { path: 'ip-restrictions', component: SecurityDetail, data: { tab: 'ip-restrictions' } },
+  { path: ':id', component: SecurityDetail },
 ];

@@ -1,0 +1,18 @@
+@if (invoice) {
+  <app-page-header eyebrow="Billing" [title]="invoice.id" description="Review invoice status, payment dates, and tenant billing context."><a class="btn btn-outline-secondary" routerLink="/billing/invoices">Back to invoices</a></app-page-header>
+  <section class="billing-stats"><app-content-card><strong>{{ invoice.tenant }}</strong><span>Tenant</span></app-content-card><app-content-card><strong>{{ invoice.amount }}</strong><span>Invoice amount</span></app-content-card><app-content-card><strong>{{ invoice.due }}</strong><span>Due date</span></app-content-card><app-content-card><app-status-badge [label]="invoice.status" [tone]="statusTone(invoice.status)" /><span>Invoice status</span></app-content-card></section>
+  <app-content-card title="Invoice details" description="Billing document and collection context."><dl class="billing-details"><div><dt>Invoice ID</dt><dd>{{ invoice.id }}</dd></div><div><dt>Tenant</dt><dd>{{ invoice.tenant }}</dd></div><div><dt>Issued</dt><dd>{{ invoice.issued }}</dd></div><div><dt>Last updated</dt><dd>{{ invoice.updated }}</dd></div></dl></app-content-card>
+} @else {
+  <app-page-header eyebrow="Billing" [title]="getActiveTabTitle()" description="Monitor revenue, invoices, payment methods, and billing activity across tenants."><button class="btn btn-primary" type="button">Export billing report</button></app-page-header>
+  <nav class="billing-tabs" aria-label="Billing sections">@for (item of tabs; track item[0]) { <a [routerLink]="['/billing', item[1]]" [class.billing-tabs__active]="tab === item[1]">{{ item[0] }}</a> }</nav>
+  @if (tab === 'payment-methods') {
+    <app-content-card title="Payment methods" description="Payment instruments configured for tenant billing." [padded]="false"><app-data-table [columns]="paymentColumns" [rows]="service.paymentMethods" [pageSize]="8" rowLabel="payment method" /></app-content-card>
+  } @else if (tab === 'history') {
+    <app-content-card title="Billing history" description="Recent invoice, payment, and collection events." [padded]="false"><app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="billing event" /></app-content-card>
+  } @else if (tab === 'invoices') {
+    <app-content-card title="Invoice directory" description="Invoices issued across all tenants." [padded]="false"><app-data-table [columns]="invoiceColumns" [rows]="service.invoices()" [pageSize]="8" rowLabel="invoice" [rowKey]="(row) => row.id" /><div class="billing-links">@for (item of service.invoices(); track item.id) { <a [routerLink]="['/billing', item.id]">View {{ item.id }}</a> }</div></app-content-card>
+  } @else {
+    <section class="billing-stats"><app-content-card><strong>{{ service.metrics.monthlyRevenue }}</strong><span>Monthly revenue</span></app-content-card><app-content-card><strong>{{ service.metrics.outstanding }}</strong><span>Outstanding balance</span></app-content-card><app-content-card><strong>{{ service.metrics.paidThisMonth }}</strong><span>Paid this month</span></app-content-card><app-content-card><strong>{{ service.metrics.overdue }}</strong><span>Overdue invoices</span></app-content-card></section>
+    <app-content-card title="Recent billing activity" description="Payment, invoice, and collection events requiring visibility." [padded]="false"><app-data-table [columns]="activityColumns" [rows]="service.activity" [pageSize]="5" rowLabel="billing event" /></app-content-card>
+  }
+}

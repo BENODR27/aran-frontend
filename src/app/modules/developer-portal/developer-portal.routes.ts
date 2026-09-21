@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
-import { DeveloperPage } from './developer-page';
+import { DeveloperList } from './components/developer-list/developer-list';
+import { DeveloperDetail } from './components/developer-detail/developer-detail';
 
 export const DEVELOPER_PORTAL_ROUTES: Routes = [
-  { path: '', component: DeveloperPage, data: { tab: 'api-docs' } },
-  { path: 'api-docs', component: DeveloperPage, data: { tab: 'api-docs' } },
-  { path: 'sdk-downloads', component: DeveloperPage, data: { tab: 'sdk-downloads' } },
-  { path: 'oauth-management', component: DeveloperPage, data: { tab: 'oauth-management' } },
-  { path: ':id', component: DeveloperPage },
+  { path: '', component: DeveloperList },
+  { path: 'api-docs', component: DeveloperDetail, data: { tab: 'api-docs' } },
+  { path: 'sdk-downloads', component: DeveloperDetail, data: { tab: 'sdk-downloads' } },
+  { path: 'oauth-management', component: DeveloperDetail, data: { tab: 'oauth-management' } },
+  { path: ':id', component: DeveloperDetail },
 ];

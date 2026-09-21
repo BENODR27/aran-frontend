@@ -1,0 +1,6 @@
+<app-page-header eyebrow="Company management" title="Companies" description="Manage companies and their IAM relationships." />
+<app-content-card title="Company directory" description="Companies registered across all tenants." [padded]="false">
+  <div class="company-toolbar"><span>{{ service.companies().length }} companies</span><a class="btn btn-primary" routerLink="/companies/create">Create company</a></div>
+  <app-data-table [columns]="columns" [rows]="service.companies()" [pageSize]="8" rowLabel="company" [rowKey]="(row) => row.id" />
+  <div class="company-links">@for (item of service.companies(); track item.id) { <a [routerLink]="['/companies', item.id]">View {{ item.name }}</a> }</div>
+</app-content-card>

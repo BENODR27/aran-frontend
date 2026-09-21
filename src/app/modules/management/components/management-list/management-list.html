@@ -1,0 +1,67 @@
+<app-page-header [eyebrow]="config.eyebrow" [title]="mode === 'create' ? 'Create ' + config.title : config.title" [description]="config.description">
+  @if (!mode) {
+    <a class="btn btn-primary" [routerLink]="['create']">Create {{ config.title }}</a>
+  } @else {
+    <a class="btn btn-outline-secondary" [routerLink]="['../']">Back to {{ config.title }}</a>
+  }
+</app-page-header>
+
+@if (mode === 'create') {
+  <app-content-card title="Configuration" description="Provide the details for this new resource.">
+    <form class="management-form" (ngSubmit)="save()">
+      @for (field of config.fields; track field.key) {
+        <label class="management-form__field">
+          <span>{{ field.label }}</span>
+          @if (field.key === 'status') {
+            <select class="form-select" [name]="field.key" [(ngModel)]="form.status">
+              <option value="Active">Active</option>
+              <option value="Review">Review</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          } @else {
+            <input
+              class="form-control"
+              [name]="field.key"
+              [(ngModel)]="form[field.key === 'name' ? 'name' : 'owner']"
+              [placeholder]="field.placeholder"
+            />
+          }
+        </label>
+      }
+      <button class="btn btn-primary" type="submit">Create {{ config.title }}</button>
+    </form>
+  </app-content-card>
+} @else if (mode === 'detail') {
+  @if (selectedRow(); as row) {
+    <app-content-card [title]="row.name" description="Resource details and lifecycle status.">
+      @if (config.tabs.length) {
+        <nav class="management-tabs" aria-label="Resource sections">
+          @for (tab of config.tabs; track tab.label) {
+            <a [routerLink]="tab.path ? [tab.path] : ['./']">{{ tab.label }}</a>
+          }
+        </nav>
+      }
+      <dl class="management-details">
+        <div><dt>Status</dt><dd><app-status-badge [label]="row.status" [tone]="statusTone(row.status)" /></dd></div>
+        <div><dt>Owner</dt><dd>{{ row.owner }}</dd></div>
+        <div><dt>Last updated</dt><dd>{{ row.updated }}</dd></div>
+        <div><dt>Resource ID</dt><dd>{{ row.id }}</dd></div>
+      </dl>
+    </app-content-card>
+  } @else {
+    <app-content-card title="Resource not found" description="The requested resource is no longer available." />
+  }
+} @else {
+  <app-content-card [title]="config.title" [description]="config.description" [padded]="false">
+    <app-action-toolbar>
+      <span toolbar-filters class="text-muted">{{ rows.length }} resources</span>
+      <a toolbar-actions class="btn btn-sm btn-outline-secondary" [routerLink]="['create']">Add resource</a>
+    </app-action-toolbar>
+    <app-data-table [columns]="columns" [rows]="rows" rowLabel="resource" [rowKey]="(row) => row.id" />
+    <div class="management-links">
+      @for (row of rows; track row.id) {
+        <a [routerLink]="[row.id]">View {{ row.name }}</a>
+      }
+    </div>
+  </app-content-card>
+}
