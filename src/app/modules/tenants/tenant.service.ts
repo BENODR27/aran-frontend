@@ -23,11 +23,41 @@ export class TenantService {
   }
 
   readonly activity: readonly TenantActivity[] = [
-    { event: 'Tenant administrator invited', actor: 'Maya Haddad', resource: 'Northstar tenant', status: 'Completed', updated: 'Today, 16:12' },
-    { event: 'Subscription upgraded', actor: 'Omar Khalil', resource: 'Cedar Manufacturing', status: 'Completed', updated: 'Today, 15:48' },
-    { event: 'Access review opened', actor: 'Security Team', resource: 'Atlas Health Group', status: 'Review', updated: 'Today, 15:21' },
-    { event: 'Tenant access suspended', actor: 'Platform Admin', resource: 'Summit Logistics', status: 'Blocked', updated: 'Today, 14:57' },
-    { event: 'Company added', actor: 'Lina Saad', resource: 'Northstar tenant', status: 'Completed', updated: 'Today, 14:36' },
+    {
+      event: 'Tenant administrator invited',
+      actor: 'Maya Haddad',
+      resource: 'Northstar tenant',
+      status: 'Completed',
+      updated: 'Today, 16:12',
+    },
+    {
+      event: 'Subscription upgraded',
+      actor: 'Omar Khalil',
+      resource: 'Cedar Manufacturing',
+      status: 'Completed',
+      updated: 'Today, 15:48',
+    },
+    {
+      event: 'Access review opened',
+      actor: 'Security Team',
+      resource: 'Atlas Health Group',
+      status: 'Review',
+      updated: 'Today, 15:21',
+    },
+    {
+      event: 'Tenant access suspended',
+      actor: 'Platform Admin',
+      resource: 'Summit Logistics',
+      status: 'Blocked',
+      updated: 'Today, 14:57',
+    },
+    {
+      event: 'Company added',
+      actor: 'Lina Saad',
+      resource: 'Northstar tenant',
+      status: 'Completed',
+      updated: 'Today, 14:36',
+    },
   ];
 
   create(name: string, plan: string): TenantRecord {

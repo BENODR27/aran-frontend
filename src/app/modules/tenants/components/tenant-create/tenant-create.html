@@ -1,10 +1,24 @@
-<app-page-header eyebrow="Tenant management" title="Create tenant" description="Register a new SaaS customer and establish its subscription boundary.">
+<app-page-header
+  eyebrow="Tenant management"
+  title="Create tenant"
+  description="Register a new SaaS customer and establish its subscription boundary."
+>
   <a class="btn btn-outline-secondary" routerLink="/tenants">Back to tenants</a>
 </app-page-header>
-<app-content-card title="Tenant details" description="Set the initial identity and commercial configuration.">
+<app-content-card
+  title="Tenant details"
+  description="Set the initial identity and commercial configuration."
+>
   <form class="tenant-form" (ngSubmit)="save()">
-    <label><span>Tenant name</span><input class="form-control" name="name" [(ngModel)]="form.name" placeholder="Enter tenant name" required /></label>
-    <label><span>Subscription plan</span><select class="form-select" name="plan" [(ngModel)]="form.plan"><option>Starter</option><option>Growth</option><option>Enterprise</option></select></label>
+    <label
+      ><span>Tenant name</span
+      ><input
+        class="form-control"
+        name="name"
+        [(ngModel)]="form.name"
+        placeholder="Enter tenant name"
+        required
+    /></label>
     <button class="btn btn-primary" type="submit">Create tenant</button>
   </form>
 </app-content-card>
